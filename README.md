@@ -15,14 +15,6 @@ from selenium.webdriver.support import expected_conditions as EC
 # Инициализация WebDriver
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 
-# Пример использования
-try:
-    driver.get("https://999.md/ru/profile/EgorCeban")
-    print("Страница успешно открыта!")
-except Exception as e:
-    print(f"Произошла ошибка: {e}")
-finally:
-    driver.quit()
 
 # Функция для загрузки файла по ссылке
 def download_file(url, filename):
@@ -149,8 +141,10 @@ try:
     password_input = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.CSS_SELECTOR, "input[data-testid='royal-pass']"))
     )
+
     password_input.send_keys(KEY)
     pag.sleep(5)  # Ждем, чтобы устранить возможные задержки
+
     # Wait for the "Вход" button and click it
     login_button = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.CSS_SELECTOR, "button[name='login'][data-testid='royal-login-button']"))
@@ -172,10 +166,9 @@ try:
     # Navigate to the profile page
 except Exception as e:
     print(f"An error occurred: {str(e)}")
-    print("Current URL:", driver.current_url)
 
 path = ["wash.png", "/Users/egorceban/PycharmProjects/pythonProject/brave3690/freeze.png", "/Users/egorceban/PycharmProjects/pythonProject/brave3690/oven.png", "micro.png", "dish.png", "coffee.png"] # Картинки
-Wash = r"C:\Program Files\JetBrains\PyCharm 2023.3.4\FB.create\wash.png"
+Wash = r"/Users/egorceban/PycharmProjects/pythonProject/wash.png"
 Freeze, Oven, Micro, Dish, Coffee = "freeze.png", "oven.png", "micro.png", "dish.png", "coffee.png" # Картинки
 def find_and_click(image_path):
     try:
@@ -193,8 +186,7 @@ def find_and_click(image_path):
 def main():
     while True:
         try:
-
-            location = pag.locateOnScreen(Wash, confidence=0.69)
+            location = pag.locateOnScreen(Wash, confidence=0.11)
             pag.sleep(1)
             if location is not None:
                 print(f"Кнопка Wash найдена")
@@ -207,81 +199,37 @@ def main():
                 WebDriverWait(driver, 20).until(
                     EC.presence_of_element_located((By.CSS_SELECTOR, "input.x1i10hfl.xggy1nq.xtpw4lu.x1tutvks.x1s3xk63.x1s07b3s.x1kdt53j.x1a2a7pz.xjbqb8w.x1ejq31n.xd10rxx.x1sy0etr.x17r0tee.x9f619.xzsf02u.x1uxerd5.x1fcty0u.x132q4wb.x1a8lsjc.x1pi30zi.x1swvt13.x9desvi.xh8yej3"))
                 )
-                # Вставляем название в поле для названия
                 title_input = driver.find_element(By.CSS_SELECTOR, "input.x1i10hfl.xggy1nq.xtpw4lu.x1tutvks.x1s3xk63.x1s07b3s.x1kdt53j.x1a2a7pz.xjbqb8w.x1ejq31n.xd10rxx.x1sy0etr.x17r0tee.x9f619.xzsf02u.x1uxerd5.x1fcty0u.x132q4wb.x1a8lsjc.x1pi30zi.x1swvt13.x9desvi.xh8yej3")
-                title_input.send_keys(title_text)  # Вставляем текст
+                title_input.send_keys(title_text)
                 print("Название вставлено в поле ввода.")
 
-                pag.sleep(1)  # Задержка 1 секунда перед следующим элементом
+                pag.sleep(1)
 
-                # Вставляем описание в соответствующее поле
-                description_input = driver.find_element(By.CSS_SELECTOR,
-                                                        "textarea[name='#13.value']")  # Предполагается, что это текстовая область
-                description_input.send_keys(description_text)
-                print("Описание вставлено в поле ввода.")
-
-                # Вставляем цену в поле для цены
-                price_input = driver.find_element(By.CSS_SELECTOR,
-                                                  "input[name='#2.value.value']")  # Убедитесь, что здесь правильный селектор!
-                price_input.send_keys(price_text)
-                print("Цена вставлена в поле ввода.")
-                
-
-                # Допустим, у вас есть идентификатор фрейма, в котором находится кнопка "Регион"
-                # Если фрейма нет, просто удалите этот блок и связанный с ним switch_to
-                frame_id = "12900" # Замените на фактический ID вашего фрейма, если он есть
-
-                # Переключаемся на фрейм (если он есть)
-                # Если фрейма нет, закомментируйте или удалите следующие 2 строки
-                WebDriverWait(driver, 10).until(EC.frame_to_be_available_and_switch_to_it((By.ID, frame_id)))
-
-                # Находим кнопку, которая открывает список городов (это твоя кнопка "select-style__input" с name "7")
-                # Я использую CSS_SELECTOR, так как ты упомянула "select-style__input" и "name='7'"
-                region_button = WebDriverWait(driver, 10).until(
-                    EC.element_to_be_clickable((By.CSS_SELECTOR, "button.select-style__input[name='7']"))
+                button = WebDriverWait(driver, 30).until(
+                    EC.element_to_be_clickable((By.XPATH, "//span[text()='Дополнительная информация']/ancestor::div[@role='button']"))
                 )
-                region_button.click()
+                print("Текст кнопки:", button.text)
+                button.click()
+                print("Нажата кнопка: 'Дополнительная информация'")
 
-                # Ждем, пока появится список городов.
-                # Предполагаем, что список городов тоже имеет какой-то уникальный селектор.
-                # Если это не всплывающий список, а просто новые элементы на странице,
-                # то ожидание может быть по наличию одного из городов.
-                # Здесь я использую общий селектор для списка, тебе нужно будет его уточнить
-                city_list_container = WebDriverWait(driver, 10).until(
-                    EC.presence_of_element_located((By.XPATH, "//*[contains(@class, [@value='12900'])]"))  # Замените на актуальный селектор списка городов
+                desc_input = WebDriverWait(driver, 50).until(
+                    EC.element_to_be_clickable((By.ID, "«r2b»"))
                 )
+                print("Текст поля описания:", desc_input.get_attribute("aria-label") or desc_input.get_attribute("placeholder") or desc_input.get_attribute("id"))
+                desc_input.click()
+                pag.press('enter')
+                print("Фокус установлен на поле описания через TAB и ENTER. Вставляем текст через pag...")
 
-                # Теперь выбираем Кишинёв. Мы знаем его value='12900'.
-                # Если Кишинёв отображается как <option value="12900">Кишинёв</option>
-                # то используем By.XPATH с value.
-                chisinau_option = WebDriverWait(driver, 10).until(
-                    EC.element_to_be_clickable((By.XPATH, "//option[@value='12900']"))
-                )
-                chisinau_option.click()
-
-                # Проверяем, был ли выбор успешным (например, по изменению текста кнопки или по появлению нового элемента)
-                # Этот блок может быть более специфичным для твоего сайта.
-                # Здесь я проверяю, изменился ли текст на кнопке выбора региона на "Кишинёв".
-                # Тебе нужно будет адаптировать это под фактический способ отображения выбранного города.
-                try:
-                    WebDriverWait(driver, 5).until(
-                        EC.text_to_be_present_in_element((By.CSS_SELECTOR, "button.select-style__input[name='7']"), "Кишинёв")
-                    )
-                    print("Город Кишинёв выбран успешно.")
-                except:
-                    print("Не удалось подтвердить выбор города Кишинёв. Попробуем кликнуть ещё раз.")
-                    chisinau_option.click() # Попробуем кликнуть еще раз
-
-                # Возвращаемся к основному контексту страницы (если до этого переключались на фрейм)
-                # Если фрейма нет, закомментируйте или удалите эту строку
-                driver.switch_to.default_content()
-                print("Успешное заполнение формы!")
+                import pyperclip
+                pyperclip.copy(description_text)
+                pag.sleep(0.5)
+                pag.hotkey('command', 'v')
+                print("Описание вставлено в поле через буфер обмена и pag.")
 
                 # Кишинёв мун.(pag.sleep(0.1),
                 pag.keyDown('shift')
                 pag.press('tab', presses=1)
                 pag.keyUp('shift')
-                pag.sleep(0.1)
                 pag.press('down', presses=19, interval=0.01)
                 pag.press('enter')
                 # MDL
@@ -324,86 +272,63 @@ def main():
                 driver.get(profile_url)
                 pag.sleep(5)
 
-                location = pag.locateOnScreen(Freeze, confidence=0.75)
+                location = pag.locateOnScreen(Freeze, confidence=0.11)
                 pag.sleep(1)
                 if location is not None:
                     print(f"Кнопка Freeze найдена")
-                    # Переход к странице добавления объявления
-                    url = "https://999.md/ru/add?category=household-appliances&subcategory=household-appliances%2Frefrigerators"
+                    # Переход к странице добавления объявления на Marketplace
+                    url = "https://www.facebook.com/marketplace/create/item"
                     driver.get(url)
-                    pag.sleep(1)  # Задержка 1 секунда перед следующим элементом
+                    pag.sleep(1)
 
-                    # Wait for the page containing the textarea
+                    # Ждем поле для названия и вставляем название
                     WebDriverWait(driver, 20).until(
-                        EC.presence_of_element_located((By.CSS_SELECTOR, "textarea[name='#13.value']")))
-
-                    # Вставляем название в поле для названия
-                    title_input = driver.find_element(By.CSS_SELECTOR, "input[name='#12.value.ru']")
-                    title_input.send_keys(title_text)  # Вставляем текст
+                        EC.presence_of_element_located((By.CSS_SELECTOR, "input.x1i10hfl.xggy1nq.xtpw4lu.x1tutvks.x1s3xk63.x1s07b3s.x1kdt53j.x1a2a7pz.xjbqb8w.x1ejq31n.xd10rxx.x1sy0etr.x17r0tee.x9f619.xzsf02u.x1uxerd5.x1fcty0u.x132q4wb.x1a8lsjc.x1pi30zi.x1swvt13.x9desvi.xh8yej3"))
+                    )
+                    title_input = driver.find_element(By.CSS_SELECTOR, "input.x1i10hfl.xggy1nq.xtpw4lu.x1tutvks.x1s3xk63.x1s07b3s.x1kdt53j.x1a2a7pz.xjbqb8w.x1ejq31n.xd10rxx.x1sy0etr.x17r0tee.x9f619.xzsf02u.x1uxerd5.x1fcty0u.x132q4wb.x1a8lsjc.x1pi30zi.x1swvt13.x9desvi.xh8yej3")
+                    title_input.send_keys(title_text)
                     print("Название вставлено в поле ввода.")
 
-                    pag.sleep(1)  # Задержка 1 секунда перед следующим элементом
-
-                    # Вставляем цену в поле для цены
-                    price_input = driver.find_element(By.CSS_SELECTOR,
-                                                      "input[name='#2.value.value']")  # Убедитесь, что здесь правильный селектор!
-                    price_input.send_keys(price_text)
-                    print("Цена вставлена в поле ввода.")
-
-                    # Вставляем описание в соответствующее поле
-                    description_input = driver.find_element(By.CSS_SELECTOR,
-                                                            "textarea[name='#13.value']")  # Предполагается, что это текстовая область
-                    description_input.send_keys(description_text)
-                    print("Описание вставлено в поле ввода.")
-                    # Используем frame_id из ввода
-                    frame_id = "#708.value"
-                    input_element = driver.find_element(By.CSS_SELECTOR, f"input[name='{frame_id}']")  # Убедитесь, что здесь правильный селектор!
-
-                    # Переключаемся на фрейм, если требуется (обычно для input не нужен фрейм, но если нужен, используйте frame_id)
-                    # WebDriverWait(driver, 10).until(EC.frame_to_be_available_and_switch_to_it((By.ID, frame_id)))
-
-                    # Находим кнопку "Марка" и кликаем по ней (замените селектор на актуальный)
-                    region_button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, frame_id)))
-                    region_button.click()
-
-                    # Ждем, пока появится список городов (замените селектор на актуальный)
-                    city_list = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, frame_id)))
-
-                    # Выбираем нужный город из списка (замените селектор на актуальный)
-                    city = city_list.find_element(By.CSS_SELECTOR, "option[value='18097']")
-                    city.click()
-
-                    # Проверяем, был ли выбор успешным
-                    if city.is_selected():
-                        print("Город выбран успешно")
-                    else:
-                        print("Не удалось выбрать город")
-                        city.click()  # Попробуем кликнуть еще раз
-                        pag.press('enter')  # Добавлен enter после повторного клика
-
-                    # Возвращаемся к основному контексту страницы, если переключались на фрейм
-                    # driver.switch_to.default_content()
-
-                    select = WebDriverWait(driver, 10).until(
-                        EC.presence_of_element_located((By.CSS_SELECTOR, "select[name='#708.value']"))
+                    button = WebDriverWait(driver, 50).until(
+                        EC.element_to_be_clickable((By.XPATH, "//span[text()='Дополнительная информация']/ancestor::div[@role='button']"))
                     )
-                    select = Select(select)
-                    select.select_by_value("18097")
+                    button.click()
+                    pag.press('tab')
+                    pag.sleep(1)
 
-                    # Новый блок, который нужно добавить перед MDL. Поменять местами блок цена с текстом
-                    (pag.sleep(1), pag.press('tab', presses=2, interval=0.01),
-                     pag.press('down', presses=2, interval=0.01),
-                     pag.press('enter'),  # Добавлено нажатие Enter
-                     pag.keyDown('shift'), pag.press('tab', presses=1, interval=0.01),
-                     pag.keyUp('shift'), pag.sleep(0.1),
-                     pag.press('space'), pag.sleep(0.1),
-                     pag.press('tab', presses=5, interval=0.01))
+                    # Получаем активный элемент после TAB
+                    active_element = driver.switch_to.active_element
+                    try:
+                        element_id = active_element.get_attribute("id")
+                        element_name = active_element.get_attribute("name")
+                        element_placeholder = active_element.get_attribute("placeholder")
+                        print(f"Атрибуты активного элемента: id={element_id}, name={element_name}, placeholder={element_placeholder}")
+                    except Exception as e:
+                        print(f"Не удалось получить атрибуты активного элемента: {e}")
 
-                    # Блок MDL
+                    # Теперь можно использовать active_element для ввода текста
+                    active_element.click()
+                    pag.press('enter')
+                    print("Фокус установлен на поле описания через ENTER. Вставляем текст через pag...")
+
+                    pyperclip.copy(description_text)
+                    pag.sleep(0.5)
+                    pag.hotkey('command', 'v')
+                    print("Описание вставлено в поле через буфер обмена и pag.")
+
+                    # Кишинёв мун.(pag.sleep(0.1),
+                    pag.keyDown('shift')
+                    pag.press('tab', presses=1)
+                    pag.keyUp('shift')
+                    pag.press('down', presses=19, interval=0.01)
+                    pag.press('enter')
+                    # MDL
                     (pag.sleep(1), pag.press('tab', presses=2, interval=0.01),
                      pag.press('down', presses=3, interval=0.01), pag.press('enter'))
 
-                    # Остальной код
+                    (pag.sleep(1), pag.press('tab', presses=2, interval=0.01),
+                     pag.press('down', presses=2, interval=0.01), pag.press('enter'))  # Изменено на 2
+
                     (pag.sleep(1), pag.keyDown('shift'),
                      pag.press('tab', presses=2), pag.keyUp('shift'),
                      pag.sleep(1), pag.press('space'))
@@ -428,7 +353,6 @@ def main():
                 else:
                     print(f"Кнопка найдена?")
                     return True
-                #
 
             except Exception:
                 try:
@@ -436,352 +360,169 @@ def main():
                     profile_url = "https://999.md/ru/profile/EgorCeban"
                     driver.get(profile_url)
                     pag.sleep(5)
-                    location = pag.locateOnScreen(Oven, confidence=0.75)
+                    location = pag.locateOnScreen(Oven, confidence=0.11)
                     pag.sleep(1)
                     if location is not None:
                         print(f"Кнопка Oven найдена")
-                        location = pag.locateOnScreen(Oven, confidence=0.75)
+                        # Переход к странице добавления объявления на Marketplace
+                        url = "https://www.facebook.com/marketplace/create/item"
+                        driver.get(url)
+                        pag.sleep(1)
+
+                        # Ждем поле для названия и вставляем название
+                        WebDriverWait(driver, 20).until(
+                            EC.presence_of_element_located((By.CSS_SELECTOR, "input.x1i10hfl.xggy1nq.xtpw4lu.x1tutvks.x1s3xk63.x1s07b3s.x1kdt53j.x1a2a7pz.xjbqb8w.x1ejq31n.xd10rxx.x1sy0etr.x17r0tee.x9f619.xzsf02u.x1uxerd5.x1fcty0u.x132q4wb.x1a8lsjc.x1pi30zi.x1swvt13.x9desvi.xh8yej3"))
+                        )
+                        title_input = driver.find_element(By.CSS_SELECTOR, "input.x1i10hfl.xggy1nq.xtpw4lu.x1tutvks.x1s3xk63.x1s07b3s.x1kdt53j.x1a2a7pz.xjbqb8w.x1ejq31n.xd10rxx.x1sy0etr.x17r0tee.x9f619.xzsf02u.x1uxerd5.x1fcty0u.x132q4wb.x1a8lsjc.x1pi30zi.x1swvt13.x9desvi.xh8yej3")
+                        title_input.send_keys(title_text)
+                        print("Название вставлено в поле ввода.")
+
+                        pag.sleep(1)
+
+                        button = WebDriverWait(driver, 30).until(
+                            EC.element_to_be_clickable((By.XPATH, "//span[text()='Дополнительная информация']/ancestor::div[@role='button']"))
+                        )
+                        print("Текст кнопки:", button.text)
+                        button.click()
+                        print("Нажата кнопка: 'Дополнительная информация'")
+                        try:
+                            desc_input_locator = (By.ID, "«rfp»")
+                            desc_input_field = WebDriverWait(driver, 50).until(
+                                EC.element_to_be_clickable(desc_input_locator)
+                            )
+                            print("Поле описания найдено и кликабельно.")
+
+                            # Шаг 3: Вставка текста в поле описания
+                            desc_input_field.send_keys(description_text)
+                            print(f"Текст '{description_text}' вставлен в поле описания.")
+
+                        except Exception as e:
+                            print(f"Ошибка при взаимодействии с полем описания: {e}")
+                            # Здесь можно добавить логику для повторной попытки или завершения скрипта
+                        print("Текст поля описания:", desc_input.get_attribute("aria-label") or desc_input.get_attribute("placeholder") or desc_input.get_attribute("id"))
+                        desc_input.click()
+                        pag.press('enter')
+                        print("Фокус установлен на поле описания через TAB и ENTER. Вставляем текст через pag...")
+
+                        pyperclip.copy(description_text)
+                        pag.sleep(0.5)
+                        pag.hotkey('command', 'v')
+                        print("Описание вставлено в поле через буфер обмена и pag.")
+
+                        # Кишинёв мун.(pag.sleep(0.1),
+                        pag.keyDown('shift')
+                        pag.press('tab', presses=1)
+                        pag.keyUp('shift')
+                        pag.press('down', presses=19, interval=0.01)
+                        pag.press('enter')
+                        # MDL
+                        (pag.sleep(1), pag.press('tab', presses=2, interval=0.01),
+                         pag.press('down', presses=3, interval=0.01), pag.press('enter'))
+
+                        (pag.sleep(1), pag.press('tab', presses=2, interval=0.01),
+                         pag.press('down', presses=2, interval=0.01), pag.press('enter'))  # Изменено на 2
+
+                        (pag.sleep(1), pag.keyDown('shift'),
+                         pag.press('tab', presses=2), pag.keyUp('shift'),
+                         pag.sleep(1), pag.press('space'))
+                        (pag.sleep(1),
+                         pag.press('tab', presses=3), pag.keyDown('shift'),
+                         pag.press('tab', presses=2), pag.keyUp('shift'),
+                         pag.sleep(1), pag.press('space'))
+                        (pag.sleep(2),
+                         pag.click(), pag.sleep(2),
+                         pag.press('down', presses=1, interval=0.01), pag.press('down', presses=1, interval=0.01),
+                         pag.keyDown('shift'), pag.press('up', presses=1, interval=0.01),
+                         pag.keyUp('shift'), pag.press('enter'))
+                        pag.sleep(2)
+                        (pag.sleep(1), pag.press('tab', presses=9),
+                         pag.keyDown('shift'), pag.press('tab', presses=1),
+                         pag.keyUp('shift'), pag.sleep(0.1),
+                         pag.press('space'))
+                        (pag.sleep(0.1), pag.press('tab', presses=3),
+                         pag.sleep(0.1), pag.press('space'))
+                        conf = pag.confirm("Продолжить?", "Confirmation")
+
+                        # === Micro ===
+                        location = pag.locateOnScreen(Micro, confidence=0.11)
                         pag.sleep(1)
                         if location is not None:
                             print(f"Кнопка Micro найдена")
-                            # Переход к странице добавления объявления
-                            url = "https://999.md/ru/add?category=household-appliances&subcategory=household-appliances%2Fstove-oven"
+                            url = "https://999.md/ru/add?category=household-appliances&subcategory=household-appliances%2Fmicrowaves"
                             driver.get(url)
-                            pag.sleep(1)  # Задержка 1 секунда перед следующим элементом
-
-                            # Wait for the page containing the textarea
+                            pag.sleep(1)
                             WebDriverWait(driver, 20).until(
-                                EC.presence_of_element_located((By.CSS_SELECTOR, "textarea[name='#13.value']")))
-
-                            # Вставляем название в поле для названия
+                                EC.presence_of_element_located((By.CSS_SELECTOR, "textarea[name='#13.value']"))
+                            )
                             title_input = driver.find_element(By.CSS_SELECTOR, "input[name='#12.value.ru']")
-                            title_input.send_keys(title_text)  # Вставляем текст
+                            title_input.send_keys(title_text)
                             print("Название вставлено в поле ввода.")
-
-                            pag.sleep(1)  # Задержка 1 секунда перед следующим элементом
-
-                            # Вставляем описание в соответствующее поле
-                            description_input = driver.find_element(By.CSS_SELECTOR,
-                                                                    "textarea[name='#13.value']")  # Предполагается, что это текстовая область
+                            pag.sleep(1)
+                            description_input = driver.find_element(By.CSS_SELECTOR, "textarea[name='#13.value']")
                             description_input.send_keys(description_text)
                             print("Описание вставлено в поле ввода.")
-
-                            # Вставляем цену в поле для цены
-                            price_input = driver.find_element(By.CSS_SELECTOR,
-                                                              "input[name='#2.value.value']")  # Убедитесь, что здесь правильный селектор!
+                            price_input = driver.find_element(By.CSS_SELECTOR, "input[name='#2.value.value']")
                             price_input.send_keys(price_text)
                             print("Цена вставлена в поле ввода.")
-                            print("Успешное заполнение формы!")
-
-                            (pag.sleep(1), pag.press('tab', presses=2, interval=0.01),
-                             pag.press('down', presses=3, interval=0.01), pag.press('enter'))
-
-                            (pag.sleep(1), pag.press('tab', presses=3, interval=0.01),
-                             # Блок, следующий за MDL - 3 нажатия Tab
-                             pag.press('down', presses=3, interval=0.01),  # 3 нажатия вниз
-                             pag.press('enter'))  # Добавлено нажатие Enter
-                            pag.press('tab', presses=1, interval=0.01),  # 1 нажатие Tab
-                            pag.press('down', presses=4, interval=0.01),  # 4 нажатия вниз
-                            pag.press('enter')  # Добавлено нажатие Enter
-
-                            pag.press('tab', presses=15)  # Изменено с 9 на 15 нажатий Tab после указанного блока
-                            # Добавлено нажатие enter.
-                            pag.press('enter')
-
-                            (pag.sleep(1), pag.keyDown('shift'),
-                            pag.press('tab', presses=2), pag.keyUp('shift'),
-                            pag.sleep(1), pag.press('space'))
-                            (pag.sleep(1),
-                            pag.press('tab', presses=3), pag.keyDown('shift'),
-                            pag.press('tab', presses=2), pag.keyUp('shift'),
-                            pag.sleep(1), pag.press('space'))
-                            (pag.sleep(2),
-                            pag.click(), pag.sleep(2),
-                            pag.press('down', presses=1, interval=0.01), pag.press('down', presses=1, interval=0.01),
-                            pag.keyDown('shift'), pag.press('up', presses=1, interval=0.01),
-                            pag.keyUp('shift'), pag.press('enter'))
-                            pag.sleep(2)
-                            (pag.sleep(1), pag.press('tab', presses=15),
-                            pag.keyDown('shift'), pag.press('tab', presses=1),
-                            pag.keyUp('shift'), pag.sleep(0.1),
-                            pag.press('space'))
-                            (pag.sleep(0.1), pag.press('tab', presses=3),
-                            pag.sleep(0.1), pag.press('space'))
-
+                            # ...дальнейшие действия по заполнению формы, как выше...
                             conf = pag.confirm("Продолжить?", "Confirmation")
-
-                    else:
-                        print(f"Кнопка не найдена.")
-
-                except Exception:  # 
-                    try:
-
-                        profile_url = "https://999.md/ru/profile/EgorCeban"
-                        driver.get(profile_url)
-                        pag.sleep(5)
-                        location = pag.locateOnScreen(Micro, confidence=0.75)
-                        pag.sleep(1)
-                        if location is not None:
-                            print(f"Кнопка Micro найдена")
-                            location = pag.locateOnScreen(Micro, confidence=0.75)
-                            pag.sleep(1)
-                            if location is not None:
-                                print(f"Кнопка Micro найдена")
-                                # Переход к странице добавления объявления
-                                url = "https://999.md/ru/add?category=household-appliances&subcategory=household-appliances%2Fmicrowaves"
-                                driver.get(url)
-                                pag.sleep(1)  # Задержка 1 секунда перед следующим элементом
-
-                                # Wait for the page containing the textarea
-                                WebDriverWait(driver, 20).until(
-                                    EC.presence_of_element_located((By.CSS_SELECTOR, "textarea[name='#13.value']")))
-
-                                # Вставляем название в поле для названия
-                                title_input = driver.find_element(By.CSS_SELECTOR, "input[name='#12.value.ru']")
-                                title_input.send_keys(title_text)  # Вставляем текст
-                                print("Название вставлено в поле ввода.")
-
-                                pag.sleep(1)  # Задержка 1 секунда перед следующим элементом
-
-                                # Вставляем описание в соответствующее поле
-                                description_input = driver.find_element(By.CSS_SELECTOR,
-                                                                        "textarea[name='#13.value']")  # Предполагается, что это текстовая область
-                                description_input.send_keys(description_text)
-                                print("Описание вставлено в поле ввода.")
-
-                                # Вставляем цену в поле для цены
-                                price_input = driver.find_element(By.CSS_SELECTOR,
-                                                                  "input[name='#2.value.value']")  # Убедитесь, что здесь правильный селектор!
-                                price_input.send_keys(price_text)
-                                print("Цена вставлена в поле ввода.")
-                                print("Успешное заполнение формы!")
-
-                                # MDL
-                                (pag.sleep(1), pag.press('tab', presses=2, interval=0.01),
-                                 pag.press('down', presses=3, interval=0.01), pag.press('enter'))
-
-                                (pag.sleep(1), pag.press('tab', presses=1, interval=0.01),  # Блок, следующий за MDL
-                                 pag.press('down', presses=2, interval=0.01), pag.press('enter'))  #
-
-                                pag.press('tab', presses=14)  # Добавлено 14 нажатий Tab после указанного блока
-
-                                (pag.sleep(1), pag.keyDown('shift'),
-                                 pag.press('tab', presses=2), pag.keyUp('shift'),
-                                 pag.sleep(1), pag.press('space'))
-                                (pag.sleep(1),
-                                 pag.press('tab', presses=3), pag.keyDown('shift'),
-                                 pag.press('tab', presses=2), pag.keyUp('shift'),
-                                 pag.sleep(1), pag.press('space'))
-                                (pag.sleep(2),
-                                 pag.click(), pag.sleep(2),
-                                 pag.press('down', presses=1, interval=0.01),
-                                 pag.press('down', presses=1, interval=0.01),
-                                 pag.keyDown('shift'), pag.press('up', presses=1, interval=0.01),
-                                 pag.keyUp('shift'), pag.press('enter'))
-                                pag.sleep(2)
-                                (pag.sleep(1), pag.press('tab', presses=9),
-                                 pag.keyDown('shift'), pag.press('tab', presses=1),
-                                 pag.keyUp('shift'), pag.sleep(0.1),
-                                 pag.press('space'))
-                                (pag.sleep(0.1), pag.press('tab', presses=3),
-                                 pag.sleep(0.1), pag.press('space'))
-
-                                conf = pag.confirm("Продолжить?", "Confirmation")
-
                         else:
                             print(f"Кнопка Micro не найдена.")
 
-                    except Exception:
-                        try:
-
-                            profile_url = "https://999.md/ru/profile/EgorCeban"
-                            driver.get(profile_url)
-                            pag.sleep(5)
-                            location = pag.locateOnScreen(Dish, confidence=0.75)
+                        # === Dish ===
+                        location = pag.locateOnScreen(Dish, confidence=0.11)
+                        pag.sleep(1)
+                        if location is not None:
+                            print(f"Кнопка Dish найдена")
+                            url = "https://999.md/ru/add?category=household-appliances&subcategory=household-appliances%2Fdishwashers"
+                            driver.get(url)
                             pag.sleep(1)
-                            if location is not None:
-                                print(f"Кнопка Dish найдена")
-                                # Переход к странице добавления объявления
-                                url = "https://999.md/ru/add?category=household-appliances&subcategory=household-appliances%2Fdishwashers"
-                                driver.get(url)
-                                pag.sleep(1)  # Задержка 1 секунда перед следующим элементом
+                            WebDriverWait(driver, 20).until(
+                                EC.presence_of_element_located((By.CSS_SELECTOR, "textarea[name='#13.value']"))
+                            )
+                            title_input = driver.find_element(By.CSS_SELECTOR, "input[name='#12.value.ru']")
+                            title_input.send_keys(title_text)
+                            print("Название вставлено в поле ввода.")
+                            pag.sleep(1)
+                            description_input = driver.find_element(By.CSS_SELECTOR, "textarea[name='#13.value']")
+                            description_input.send_keys(description_text)
+                            print("Описание вставлено в поле ввода.")
+                            price_input = driver.find_element(By.CSS_SELECTOR, "input[name='#2.value.value']")
+                            price_input.send_keys(price_text)
+                            print("Цена вставлена в поле ввода.")
+                            # ...дальнейшие действия по заполнению формы, как выше...
+                            conf = pag.confirm("Продолжить?", "Confirmation")
+                        else:
+                            print(f"Кнопка Dish не найдена.")
 
-                                # Wait for the page containing the textarea
-                                WebDriverWait(driver, 20).until(
-                                    EC.presence_of_element_located((By.CSS_SELECTOR, "textarea[name='#13.value']")))
-
-                                # Вставляем название в поле для названия
-                                title_input = driver.find_element(By.CSS_SELECTOR, "input[name='#12.value.ru']")
-                                title_input.send_keys(title_text)  # Вставляем текст
-                                print("Название вставлено в поле ввода.")
-
-                                pag.sleep(1)  # Задержка 1 секунда перед следующим элементом
-
-                                # Вставляем описание в соответствующее поле
-                                description_input = driver.find_element(By.CSS_SELECTOR,
-                                                                        "textarea[name='#13.value']")  # Предполагается, что это текстовая область
-                                description_input.send_keys(description_text)
-                                print("Описание вставлено в поле ввода.")
-
-                                # Вставляем цену в поле для цены
-                                price_input = driver.find_element(By.CSS_SELECTOR,
-                                                                  "input[name='#2.value.value']")  # Убедитесь, что здесь правильный селектор!
-                                price_input.send_keys(price_text)
-                                print("Цена вставлена в поле ввода.")
-                                print("Успешное заполнение формы!")
-
-                                # MDL
-                                (pag.sleep(1), pag.press('tab', presses=2, interval=0.01),
-                                 pag.press('down', presses=3, interval=0.01), pag.press('enter'))
-
-                                (pag.sleep(1), pag.press('tab', presses=1, interval=0.01),  # Блок, следующий за MDL
-                                 pag.press('down', presses=2, interval=0.01), pag.press('enter'))  #
-
-                                pag.press('tab', presses=9)  # Изменено с 14 на 9 нажатий Tab после указанного блока
-
-                                (pag.sleep(1), pag.keyDown('shift'),
-                                 pag.press('tab', presses=2), pag.keyUp('shift'),
-                                 pag.sleep(1), pag.press('space'))
-                                (pag.sleep(1),
-                                 pag.press('tab', presses=3), pag.keyDown('shift'),
-                                 pag.press('tab', presses=2), pag.keyUp('shift'),
-                                 pag.sleep(1), pag.press('space'))
-                                (pag.sleep(2),
-                                 pag.click(), pag.sleep(2),
-                                 pag.press('down', presses=1, interval=0.01),
-                                 pag.press('down', presses=1, interval=0.01),
-                                 pag.keyDown('shift'), pag.press('up', presses=1, interval=0.01),
-                                 pag.keyUp('shift'), pag.press('enter'))
-                                pag.sleep(2)
-                                (pag.sleep(1), pag.press('tab', presses=9),
-                                 pag.keyDown('shift'), pag.press('tab', presses=1),
-                                 pag.keyUp('shift'), pag.sleep(0.1),
-                                 pag.press('space'))
-                                (pag.sleep(0.1), pag.press('tab', presses=3),
-                                 pag.sleep(0.1), pag.press('space'))
-                                conf = pag.confirm("Продолжить?", "Confirmation")
-
-                            else:
-                                print(f"Кнопка не найдена.")
-                                # Переход к странице профиля
-
-
-
-
-                        except Exception:
-                            try:
-
-                                profile_url = "https://999.md/ru/profile/EgorCeban"
-                                driver.get(profile_url)
-                                pag.sleep(5)
-                                location = pag.locateOnScreen(Coffee, confidence=0.75)
-                                pag.sleep(1)
-                                if location is not None:
-                                    print(f"Кнопка Coffee найдена")
-                                    location = pag.locateOnScreen(Coffee, confidence=0.75)
-                                    pag.sleep(1)
-                                    if location is not None:
-                                        print(f"Кнопка найдена и нажата!")
-                                        url = "https://999.md/ru/add?category=household-appliances&subcategory=household-appliances/coffee-machines"
-                                        driver.get(url)
-                                        pag.sleep(1)  # Задержка 1 секунда перед следующим элементом
-
-                                        # Wait for the page containing the textarea
-                                        WebDriverWait(driver, 20).until(
-                                            EC.presence_of_element_located(
-                                                (By.CSS_SELECTOR, "textarea[name='#13.value']")))
-
-                                        # Вставляем название в поле для названия
-                                        title_input = driver.find_element(By.CSS_SELECTOR, "input[name='#12.value.ru']")
-                                        title_input.send_keys(title_text)  # Вставляем текст
-                                        print("Название вставлено в поле ввода.")
-
-                                        pag.sleep(1)  # Задержка 1 секунда перед следующим элементом
-
-                                        # Вставляем описание в соответствующее поле
-                                        description_input = driver.find_element(By.CSS_SELECTOR,
-                                                                                "textarea[name='#13.value']")  # Предполагается, что это текстовая область
-                                        description_input.send_keys(description_text)
-                                        print("Описание вставлено в поле ввода.")
-
-                                        # Вставляем цену в поле для цены
-                                        price_input = driver.find_element(By.CSS_SELECTOR,
-                                                                          "input[name='#2.value.value']")  # Убедитесь, что здесь правильный селектор!
-                                        price_input.send_keys(price_text)
-                                        print("Цена вставлена в поле ввода.")
-                                        print("Успешное заполнение формы!")
-
-                                        # Кишинёв мун.
-                                        (pag.sleep(0.1),
-                                         pag.keyDown('shift'),
-                                         pag.press('tab', presses=1),
-                                         pag.keyUp('shift'),
-                                         pag.sleep(0.1),
-                                         pag.press('down', presses=19, interval=0.01),
-                                         pag.press('enter'))
-
-                                        # MDL
-                                        (pag.sleep(1),
-                                         pag.press('tab', presses=2, interval=0.01),
-                                         pag.press('down', presses=3, interval=0.01),
-                                         pag.press('enter'))
-
-                                        (pag.sleep(1),
-                                         pag.press('tab', presses=2, interval=0.01),
-                                         pag.press('down', presses=6, interval=0.01),
-                                         pag.press('enter'))
-
-                                        (pag.sleep(1),
-                                         pag.press('tab', presses=1, interval=0.01),
-                                         pag.press('down', presses=8, interval=0.01),
-                                         pag.press('enter'))
-
-                                        (pag.sleep(1),
-                                         pag.keyDown('shift'),
-                                         pag.press('tab', presses=2),
-                                         pag.keyUp('shift'),
-                                         pag.sleep(1),
-                                         pag.press('space'))
-
-                                        (pag.sleep(1),
-                                         pag.press('tab', presses=3),
-                                         pag.keyDown('shift'),
-                                         pag.press('tab', presses=2),
-                                         pag.keyUp('shift'),
-                                         pag.sleep(1),
-                                         pag.press('space'))
-
-                                        (pag.sleep(2),
-                                         pag.click(),
-                                         pag.sleep(2),
-                                         pag.press('down', presses=1, interval=0.01),
-                                         pag.press('down', presses=1, interval=0.01),
-                                         pag.keyDown('shift'),
-                                         pag.press('up', presses=1, interval=0.01),
-                                         pag.keyUp('shift'),
-                                         pag.press('enter'))
-                                        pag.sleep(2),
-
-                                        (pag.sleep(1),
-                                         pag.press('tab', presses=9),
-                                         pag.keyDown('shift'),
-                                         pag.press('tab', presses=1),
-                                         pag.keyUp('shift'),
-                                         pag.sleep(0.1),
-                                         pag.press('space'))
-
-                                        (pag.sleep(0.1),
-                                         pag.press('tab', presses=3),
-                                         pag.sleep(0.1),
-                                         pag.press('space'))
-                                        conf = pag.confirm("Продолжить?", "Confirmation")
-
-                                else:
-                                    print(f"Кнопка Coffee не найдена.")
-                                    return True
-
-                            except Exception:
-                                return False  # Возвращаем False, если произошла ошибка
+                        # === Coffee ===
+                        location = pag.locateOnScreen(Coffee, confidence=0.11)
+                        pag.sleep(1)
+                        if location is not None:
+                            print(f"Кнопка Coffee найдена")
+                            url = "https://999.md/ru/add?category=household-appliances&subcategory=household-appliances/coffee-machines"
+                            driver.get(url)
+                            pag.sleep(1)
+                            WebDriverWait(driver, 20).until(
+                                EC.presence_of_element_located((By.CSS_SELECTOR, "textarea[name='#13.value']"))
+                            )
+                            title_input = driver.find_element(By.CSS_SELECTOR, "input[name='#12.value.ru']")
+                            title_input.send_keys(title_text)
+                            print("Название вставлено в поле ввода.")
+                            pag.sleep(1)
+                            description_input = driver.find_element(By.CSS_SELECTOR, "textarea[name='#13.value']")
+                            description_input.send_keys(description_text)
+                            print("Описание вставлено в поле ввода.")
+                            price_input = driver.find_element(By.CSS_SELECTOR, "input[name='#2.value.value']")
+                            price_input.send_keys(price_text)
+                            print("Цена вставлена в поле ввода.")
+                            # ...дальнейшие действия по заполнению формы, как выше...
+                            conf = pag.confirm("Продолжить?", "Confirmation")
+                        else:
+                            print(f"Кнопка Coffee не найдена.")
+                except Exception as error:
+                    print(f"Произошла ошибка: {error}")
+                    continue
 
 if __name__ == "__main__":
     main()
