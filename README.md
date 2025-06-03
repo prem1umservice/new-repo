@@ -325,25 +325,17 @@ def main():
 
                     title_input.send_keys(title_text)  # Вставляем текст
 
-                    # Нажимаем на кнопку добавить фото
-                    photo_upload_button = WebDriverWait(driver, 50).until(
-                        EC.element_to_be_clickable((By.CSS_SELECTOR, "label.style_upload__label__7Jg1M[for='upload-photo']"))
+                    button = WebDriverWait(driver, 50).until(
+                        EC.element_to_be_clickable((By.XPATH, "//summary[text()='Основные характеристики']"))
                     )
-                    photo_upload_button.click()  # Кликаем на кнопку добавить фото
+                    button.click()
+                    pag.sleep(2)
 
-                    # Нажимаем на кнопку выбора валюты и выбираем MDL
-                    currency_select = WebDriverWait(driver, 50).until(
-                        EC.element_to_be_clickable((By.CSS_SELECTOR, "select[name='#2.value.unit']"))
+                    # Wait for the dropdown element and click it
+                    dropdown_button = WebDriverWait(driver, 50).until(
+                        EC.element_to_be_clickable((By.CSS_SELECTOR, "summary.style_collapse__summary__oEdHo"))
                     )
-                    currency_select.click()  # Кликаем по элементу
-
-                    # Выбираем MDL из выпадающего списка
-                    mdl_option = WebDriverWait(driver, 50).until(
-                        EC.element_to_be_clickable((By.CSS_SELECTOR, "option[value='UNIT_MDL']"))
-                    )
-                    mdl_option.click()  # Кликаем на MDL
-                    print("Название вставлено в поле ввода.")
-
+                    dropdown_button.click()
                     conf = pag.confirm("Продолжить?", "Confirmation")
 
                 else:
