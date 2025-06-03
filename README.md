@@ -3,7 +3,8 @@ import shutil
 import requests
 import pyautogui as pag
 from bs4 import BeautifulSoup
-import pyperclip  #Для буферa
+import pyperclip  # Для буфера обмена
+from IP import API, KEY  # Импорт ключей API и KEY
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
@@ -11,6 +12,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
 
 # Инициализация WebDriver
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
@@ -126,53 +128,51 @@ try:
     # Получаем текст из буфера обмена для вставки
     clipboard_text = pyperclip.paste()  # Получаем текст из буфера обмена
     # Open the login page of the website
-    driver.get("https://www.facebook.com")  # Replace with actual login URL if needed
+    driver.get("https://v2.simpalsid.com/sid/ru/user/login")  # Replace with actual login URL if needed
 
     # Wait for the login input field and enter the username
     username_input = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, "input[data-testid='royal-email']"))
+        EC.presence_of_element_located((By.CSS_SELECTOR, "input[placeholder='Введите логин или e-mail']"))
     )
-
-    API = "+37379503566"
-    KEY = "angeles1"
     username_input.send_keys(API)
 
     # Wait for the password input field and enter the password
     password_input = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, "input[data-testid='royal-pass']"))
+        EC.presence_of_element_located((By.CSS_SELECTOR, "input[placeholder='Введите от 6 символов']"))
     )
-
     password_input.send_keys(KEY)
     pag.sleep(5)  # Ждем, чтобы устранить возможные задержки
 
-    # Wait for the "Вход" button and click it
+    # Wait for the "Войти" button and click it
     login_button = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, "button[name='login'][data-testid='royal-login-button']"))
+        EC.element_to_be_clickable((By.CSS_SELECTOR, "button.Button_solid__gEcaH"))
     )
     login_button.click()
-    conf = pag.confirm("Продолжить?", "Confirmation")
-    if conf == "OK":
 
-        print("Продолжить URL")
-    # Optionally, wait for the page to load after login
-    WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, "a.styles_redirectBtn__o_7FD"))
+    # Проверяем и нажимаем кнопку входа
+    driver.execute_script("arguments[0].click();", login_button)
+
+    # Опционально, ждём появления элемента после входа (например, главной страницы)
+
+    # Ждем, пока не появится нужная ссылка на странице
+    link = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.CSS_SELECTOR, "a.styles_redirectBtn__o_7FD"))
     )
-    
-  
+    link.click()
+
     # Wait for the redirect to the 999.md URL
-    WebDriverWait(driver, 20).until(EC.url_contains("https://www.facebook.com"))
+    WebDriverWait(driver, 20).until(EC.url_contains("999.md"))
 
     # Navigate to the profile page
 except Exception as e:
     print(f"An error occurred: {str(e)}")
+    print("Current URL:", driver.current_url)
 
 path = ["wash.png", "freeze.png", "/Users/egorceban/PycharmProjects/pythonProject/brave3690/oven.png", "micro.png", "dish.png", "coffee.png"] # Картинки
-Wash = r"C:\Program Files\JetBrains\PyCharm 2023.3.4\FB.create\wash.png"
-Freeze, Oven, Micro, Dish, Coffee = "freeze.png", "oven.png", "micro.png", "dish.png", "coffee.png" # Картинки
+Wash = r"/Users/egorceban/PycharmProjects/pythonProject/wash.png"
 def find_and_click(image_path):
     try:
-        location = pag.locateOnScreen(image_path, confidence=0.75)
+        location = pag.locateOnScreen(image_path, confidence=0.11)
         pag.sleep(1)
         if location is not None:
             print(f"Кнопка найдена!")
@@ -187,25 +187,23 @@ def main():
     while True:
         try:
             location = pag.locateOnScreen(Wash, confidence=0.11)
-            pag.sleep(1)
             if location is not None:
                 print(f"Кнопка Wash найдена")
                 # Переход к странице добавления объявления
-                url = "https://www.facebook.com/marketplace/create/item"
+                url = "https://999.md/ru/add?category=household-appliances&subcategory=household-appliances%2Fwashing-machines"
                 driver.get(url)
-                pag.sleep(1)  # Задержка 1 секунда перед следующим элементом
-
-                # Wait for the page containing the input field for the title
-                WebDriverWait(driver, 20).until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR, "input.x1i10hfl.xggy1nq.xtpw4lu.x1tutvks.x1s3xk63.x1s07b3s.x1kdt53j.x1a2a7pz.xjbqb8w.x1ejq31n.xd10rxx.x1sy0etr.x17r0tee.x9f619.xzsf02u.x1uxerd5.x1fcty0u.x132q4wb.x1a8lsjc.x1pi30zi.x1swvt13.x9desvi.xh8yej3"))
+                pag.sleep(2)
+                # Дополнительная кнопка с атрибутом name="#593.value"
+                dropdown_used = WebDriverWait(driver, 50).until(
+                    EC.element_to_be_clickable((By.CSS_SELECTOR, "select[name='#593.value']"))
                 )
-                title_input = driver.find_element(By.CSS_SELECTOR, "input.x1i10hfl.xggy1nq.xtpw4lu.x1tutvks.x1s3xk63.x1s07b3s.x1kdt53j.x1a2a7pz.xjbqb8w.x1ejq31n.xd10rxx.x1sy0etr.x17r0tee.x9f619.xzsf02u.x1uxerd5.x1fcty0u.x132q4wb.x1a8lsjc.x1pi30zi.x1swvt13.x9desvi.xh8yej3")
-                title_input.send_keys(title_text)
-                print("Название вставлено в поле ввода.")
+                dropdown_used.click()
 
-                pag.sleep(1)
-
-                pag.sleep(1)
+                # Выбор опции "Б/у"
+                option_used = WebDriverWait(driver, 50).until(
+                    EC.element_to_be_clickable((By.CSS_SELECTOR, "option[data-test-id='select-option'][value='6371']"))
+                )
+                option_used.click()
 
                 # Получаем активный элемент после TAB
                 active_element = driver.switch_to.active_element
@@ -219,12 +217,7 @@ def main():
 
                 # Теперь можно использовать active_element для ввода текста
                 active_element.click()
-                pag.sleep(0.5)
                 pag.press('enter')
-
-                pag.sleep(1)
-
-                pag.sleep(1)
 
                 # Получаем активный элемент после TAB
                 active_element = driver.switch_to.active_element
@@ -238,18 +231,8 @@ def main():
 
                 # Теперь можно использовать active_element для ввода текста
                 active_element.click()
-                pag.sleep(0.5)
-                pag.press('enter')
-                button = WebDriverWait(driver, 20).until(
-                    EC.element_to_be_clickable((By.XPATH, "//span[text()='Дополнительная информация']/ancestor::div[@role='button']"))
-                )
-                button.click()
+                active_element.send_keys(description_text)
 
-                # Wait for the dropdown element and click it
-                dropdown_button = WebDriverWait(driver, 20).until(
-                    EC.element_to_be_clickable((By.CSS_SELECTOR, "div.xjyslct.xjbqb8w.x13fuv20.xu3j5b3.x1q0q8m5.x26u7qi.x972fbf.xcfux6l.x1qhh985.xm0m39n.x9f619.xzsf02u.x78zum5.x1jchvi3.x1fcty0u.x132q4wb.xdj266r.x11i5rnm.xat24cr.x1mh8g0r.x1a2a7pz.x1a8lsjc.x1pi30zi.x1swvt13.x9desvi.x1n2onr6.x16tdsg8.xh8yej3.x1ja2u2z"))
-                )
-                dropdown_button.click()
 
                 # Wait for the desired option in the dropdown and select it
                 desired_option = WebDriverWait(driver, 20).until(
@@ -296,27 +279,94 @@ def main():
         except Exception:
 
             try:
-                location = pag.locateOnScreen(Wash, confidence=0.11)
+                location = pag.locateOnScreen(Wash, confidence=0.12)
                 if location is not None:
                     print(f"Кнопка Wash найдена")
                     # Переход к странице добавления объявления
                     url = "https://999.md/ru/add?category=household-appliances&subcategory=household-appliances%2Fwashing-machines"
                     driver.get(url)
                     pag.sleep(2)
-
-                    # Automatically close the "Понятно" button if it appears
                     try:
-                        close_button = WebDriverWait(driver, 50).until(
+                        close_button = WebDriverWait(driver, 5).until(
                             EC.element_to_be_clickable((By.CSS_SELECTOR, "a.introjs-button.introjs-nextbutton.introjs-donebutton"))
                         )
                         close_button.click()
+                        driver.refresh()  # Автоматическое обновление браузера
+                        pag.sleep(1)  # Задержка после обновления  
                         print("Закрыто окно 'Понятно'.")
-                    except Exception as e:
-                        print("Кнопка 'Понятно' не найдена или произошла ошибка:", str(e))  
+                    except Exception:
+                        pass
+                        dropdown = WebDriverWait(driver, 10).until(
+                            EC.element_to_be_clickable((By.CSS_SELECTOR, ".style_select__input__h0wAV"))
+                        )
+                        dropdown.click()
+                        try:
+                            upload_label = WebDriverWait(driver, 10).until(
+                                EC.presence_of_element_located((By.CSS_SELECTOR, "label[for='upload-photo']"))
+                            )
+                            # Первая попытка: JavaScript click
+                            try:
+                                driver.execute_script("arguments[0].click();", upload_label)
+                                print("Сработал метод: JavaScript click на upload-label")
+                            except Exception as js_e:
+                                print("Метод click через JavaScript не удался, пробуем ActionChains:", js_e)
+                                # Вторая попытка: ActionChains click
+                                try:
+                                    ActionChains(driver).move_to_element(upload_label).click().perform()
+                                    print("Сработал метод: ActionChains click на upload-label")
+                                except Exception as ac_e:
+                                    print("Метод ActionChains click не удался:", ac_e)
+                        except Exception as e:
+                            print("Не удалось найти элемент upload-photo:", e)
 
-                    driver.refresh()  # Автоматическое обновление браузера
-                    pag.sleep(1)  # Задержка после обновления  
+                        # Выбор из выпадающего списка "Кишинёв мун." с проверкой
+                        try:
+                            select_elem = WebDriverWait(driver, 10).until(
+                                EC.presence_of_element_located((By.CSS_SELECTOR, "select.style_select__input__h0wAV[name='#7.value']"))
+                            )
+                            dropdown = Select(select_elem)
+                            dropdown.select_by_visible_text("Кишинёв мун.")
+                            print("Выбран пункт 'Кишинёв мун.' из выпадающего списка")
+                        except Exception as e:
+                            print("Ошибка при выборе из выпадающего списка:", e)
+                        # Попытка 1: Click через JavaScript
+                        # Ждем поле для названия и вставляем название
+                        # Попытка 2: Click через ActionChains
+                        try:
+                            upload_label_ac = WebDriverWait(driver, 10).until(
+                                EC.element_to_be_clickable((By.CSS_SELECTOR, "label[for='upload-photo']"))
+                            )
+                            ActionChains(driver).move_to_element(upload_label_ac).click().perform()
+                            print("Сработал метод: ActionChains click на upload-label")
+                        except Exception as e:
+                            print("Метод ActionChains click не удался:", e)
 
+                    option = WebDriverWait(driver, 10).until(
+                        EC.element_to_be_clickable((By.CSS_SELECTOR, "option[data-test-id='select-option'][value='6371']"))
+                    )
+                    option.click()
+
+                    # Дополнительная кнопка со стилем ошибки и выбор опции Miele
+                    dropdown_error = WebDriverWait(driver, 10).until(
+                        EC.element_to_be_clickable((By.CSS_SELECTOR, ".style_select__input__h0wAV.style_select__input__error___CkCI"))
+                    )
+                    dropdown_error.click()
+
+                    option_miele = WebDriverWait(driver, 10).until(
+                        EC.element_to_be_clickable((By.CSS_SELECTOR, "option[data-test-id='select-option'][value='8137']"))
+                    )
+                    option_miele.click()
+
+                    # Новая кнопка для выбора измерения цены и выбор MDL
+                    measurement_dropdown = WebDriverWait(driver, 10).until(
+                        EC.element_to_be_clickable((By.CSS_SELECTOR, ".style_price__measurement__select__f3t4t"))
+                    )
+                    measurement_dropdown.click()
+
+                    measurement_option = WebDriverWait(driver, 10).until(
+                        EC.element_to_be_clickable((By.CSS_SELECTOR, "option[value='UNIT_MDL']"))
+                    )
+                    measurement_option.click()
                     # Попробуем кликнуть по элементу перед вводом текста
                     title_input = WebDriverWait(driver, 50).until(
                         EC.element_to_be_clickable((By.CSS_SELECTOR, "input[name='#12.value.ru']"))
@@ -349,10 +399,10 @@ def main():
                     profile_url = "https://999.md/ru/profile/EgorCeban"
                     driver.get(profile_url)
                     pag.sleep(5)
-                    location = pag.locateOnScreen(Oven, confidence=0.11)
+                    location = pag.locateOnScreen(Wash, confidence=0.99)
                     pag.sleep(1)
                     if location is not None:
-                        print(f"Кнопка Oven найдена")
+                        print(f"Кнопка Wash найдена")
                         # Переход к странице добавления объявления на Marketplace
                         url = "https://www.facebook.com/marketplace/create/item"
                         driver.get(url)
