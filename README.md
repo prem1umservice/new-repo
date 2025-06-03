@@ -167,8 +167,8 @@ try:
 except Exception as e:
     print(f"An error occurred: {str(e)}")
 
-path = ["wash.png", "/Users/egorceban/PycharmProjects/pythonProject/brave3690/freeze.png", "/Users/egorceban/PycharmProjects/pythonProject/brave3690/oven.png", "micro.png", "dish.png", "coffee.png"] # Картинки
-Wash = r"/Users/egorceban/PycharmProjects/pythonProject/wash.png"
+path = ["wash.png", "freeze.png", "/Users/egorceban/PycharmProjects/pythonProject/brave3690/oven.png", "micro.png", "dish.png", "coffee.png"] # Картинки
+Wash = r"C:\Program Files\JetBrains\PyCharm 2023.3.4\FB.create\wash.png"
 Freeze, Oven, Micro, Dish, Coffee = "freeze.png", "oven.png", "micro.png", "dish.png", "coffee.png" # Картинки
 def find_and_click(image_path):
     try:
@@ -205,61 +205,89 @@ def main():
 
                 pag.sleep(1)
 
-                button = WebDriverWait(driver, 30).until(
+                pag.sleep(1)
+
+                # Получаем активный элемент после TAB
+                active_element = driver.switch_to.active_element
+                try:
+                    element_id = active_element.get_attribute("id")
+                    element_name = active_element.get_attribute("name")
+                    element_placeholder = active_element.get_attribute("placeholder")
+                    print(f"Атрибуты активного элемента: id={element_id}, name={element_name}, placeholder={element_placeholder}")
+                except Exception as e:
+                    print(f"Не удалось получить атрибуты активного элемента: {e}")
+
+                # Теперь можно использовать active_element для ввода текста
+                active_element.click()
+                pag.sleep(0.5)
+                pag.press('enter')
+
+                pag.sleep(1)
+
+                pag.sleep(1)
+
+                # Получаем активный элемент после TAB
+                active_element = driver.switch_to.active_element
+                try:
+                    element_id = active_element.get_attribute("id")
+                    element_name = active_element.get_attribute("name")
+                    element_placeholder = active_element.get_attribute("placeholder")
+                    print(f"Атрибуты активного элемента: id={element_id}, name={element_name}, placeholder={element_placeholder}")
+                except Exception as e:
+                    print(f"Не удалось получить атрибуты активного элемента: {e}")
+
+                # Теперь можно использовать active_element для ввода текста
+                active_element.click()
+                pag.sleep(0.5)
+                pag.press('enter')
+                button = WebDriverWait(driver, 20).until(
                     EC.element_to_be_clickable((By.XPATH, "//span[text()='Дополнительная информация']/ancestor::div[@role='button']"))
                 )
+                button.click()
+
+                # Wait for the dropdown element and click it
+                dropdown_button = WebDriverWait(driver, 20).until(
+                    EC.element_to_be_clickable((By.CSS_SELECTOR, "div.xjyslct.xjbqb8w.x13fuv20.xu3j5b3.x1q0q8m5.x26u7qi.x972fbf.xcfux6l.x1qhh985.xm0m39n.x9f619.xzsf02u.x78zum5.x1jchvi3.x1fcty0u.x132q4wb.xdj266r.x11i5rnm.xat24cr.x1mh8g0r.x1a2a7pz.x1a8lsjc.x1pi30zi.x1swvt13.x9desvi.x1n2onr6.x16tdsg8.xh8yej3.x1ja2u2z"))
+                )
+                dropdown_button.click()
+
+                # Wait for the desired option in the dropdown and select it
+                desired_option = WebDriverWait(driver, 20).until(
+                    EC.element_to_be_clickable((By.XPATH, "//span[contains(text(),'Техника')]"))
+                )
+                desired_option.click()
                 print("Текст кнопки:", button.text)
                 button.click()
-                print("Нажата кнопка: 'Дополнительная информация'")
 
-                desc_input = WebDriverWait(driver, 50).until(
-                    EC.element_to_be_clickable((By.ID, "«r2b»"))
+                # Нажатие на кнопку "Добавить фото"
+                add_photo_button = WebDriverWait(driver, 50).until(
+                    EC.element_to_be_clickable((By.CSS_SELECTOR, "div.x1i10hfl.x1qjc9v5.xjbqb8w.xjqpnuy.xa49m3k.xqeqjp1.x2hbi6w.x13fuv20.xu3j5b3.x1q0q8m5.x26u7qi.x972fbf.xcfux6l.x1qhh985.xm0m39n.x9f619.x1ypdohk.xdl72j9.x2lah0s.xe8uvvx.xdj266r.x11i5rnm.xat24cr.x1mh8g0r.x2lwn1j.xeuugli.xexx8yu.x4uap5.x18d9i69.xkhd6sd.x1n2onr6.x16tdsg8.x1hl2dhg.xggy1nq.x1ja2u2z.x1t137rt.x1o1ewxj.x3x9cwd.x1e5q0jg.x13rtm0m.x1q0g3np.x87ps6o.x1lku1pv.x1a2a7pz.x78zum5.x1iyjqo2[role='button'][tabindex='0']"))
                 )
-                print("Текст поля описания:", desc_input.get_attribute("aria-label") or desc_input.get_attribute("placeholder") or desc_input.get_attribute("id"))
-                desc_input.click()
-                pag.press('enter')
-                print("Фокус установлен на поле описания через TAB и ENTER. Вставляем текст через pag...")
+                print("Текст кнопки 'Добавить фото':", add_photo_button.text)
+                add_photo_button.click()
+                print("Нажата кнопка: 'Дополнительная информация'")
+                pag.sleep(10)
 
-                import pyperclip
-                pyperclip.copy(description_text)
-                pag.sleep(0.5)
-                pag.hotkey('command', 'v')
+                # Нажатие на кнопку "Далее" с проверкой кликабельности
+                next_button = WebDriverWait(driver, 50).until(
+                    EC.element_to_be_clickable((By.XPATH, "//span[contains(@class, 'x1lliihq') and text()='Далее']/ancestor::div[@role='none']"))
+                )
+                next_button.click()
+                print("Кнопка 'Далее' нажата.")
                 print("Описание вставлено в поле через буфер обмена и pag.")
-
-                # Кишинёв мун.(pag.sleep(0.1),
-                pag.keyDown('shift')
-                pag.press('tab', presses=1)
-                pag.keyUp('shift')
-                pag.press('down', presses=19, interval=0.01)
-                pag.press('enter')
-                # MDL
-                (pag.sleep(1), pag.press('tab', presses=2, interval=0.01),
-                 pag.press('down', presses=3, interval=0.01), pag.press('enter'))
-
-                (pag.sleep(1), pag.press('tab', presses=2, interval=0.01),
-                 pag.press('down', presses=2, interval=0.01), pag.press('enter'))  # Изменено на 2
-
-                (pag.sleep(1), pag.keyDown('shift'),
-                 pag.press('tab', presses=2), pag.keyUp('shift'),
-                 pag.sleep(1), pag.press('space'))
-                (pag.sleep(1),
-                 pag.press('tab', presses=3), pag.keyDown('shift'),
-                 pag.press('tab', presses=2), pag.keyUp('shift'),
-                 pag.sleep(1), pag.press('space'))
-                (pag.sleep(2),
-                 pag.click(), pag.sleep(2),
-                 pag.press('down', presses=1, interval=0.01), pag.press('down', presses=1, interval=0.01),
-                 pag.keyDown('shift'), pag.press('up', presses=1, interval=0.01),
-                 pag.keyUp('shift'), pag.press('enter'))
-                pag.sleep(2)
-                (pag.sleep(1), pag.press('tab', presses=9),
-                 pag.keyDown('shift'), pag.press('tab', presses=1),
-                 pag.keyUp('shift'), pag.sleep(0.1),
-                 pag.press('space'))
-                (pag.sleep(0.1), pag.press('tab', presses=3),
-                 pag.sleep(0.1), pag.press('space'))
                 conf = pag.confirm("Продолжить?", "Confirmation")
 
+                # Ожидание и клик по кнопке для открытия списка
+                dropdown_button = WebDriverWait(driver, 20).until(
+                    EC.element_to_be_clickable((By.ID, "«r28»"))  # Замените на правильный ID или локатор
+                )
+                dropdown_button.click()
+
+                # Ожидание и выбор нужного пункта в списке
+                desired_option = WebDriverWait(driver, 20).until(
+                    EC.element_to_be_clickable((By.XPATH, "//span[text()='Техника']"))  # Замените на правильный текст или локатор
+                )
+                desired_option.click()
 
             else:
                 print(f"Кнопка найдена?")
@@ -268,91 +296,60 @@ def main():
         except Exception:
 
             try:
-                profile_url = "https://999.md/ru/profile/EgorCeban"
-                driver.get(profile_url)
-                pag.sleep(5)
-
-                location = pag.locateOnScreen(Freeze, confidence=0.11)
-                pag.sleep(1)
+                location = pag.locateOnScreen(Wash, confidence=0.11)
                 if location is not None:
-                    print(f"Кнопка Freeze найдена")
-                    # Переход к странице добавления объявления на Marketplace
-                    url = "https://www.facebook.com/marketplace/create/item"
+                    print(f"Кнопка Wash найдена")
+                    # Переход к странице добавления объявления
+                    url = "https://999.md/ru/add?category=household-appliances&subcategory=household-appliances%2Fwashing-machines"
                     driver.get(url)
-                    pag.sleep(1)
+                    pag.sleep(2)
 
-                    # Ждем поле для названия и вставляем название
-                    WebDriverWait(driver, 20).until(
-                        EC.presence_of_element_located((By.CSS_SELECTOR, "input.x1i10hfl.xggy1nq.xtpw4lu.x1tutvks.x1s3xk63.x1s07b3s.x1kdt53j.x1a2a7pz.xjbqb8w.x1ejq31n.xd10rxx.x1sy0etr.x17r0tee.x9f619.xzsf02u.x1uxerd5.x1fcty0u.x132q4wb.x1a8lsjc.x1pi30zi.x1swvt13.x9desvi.xh8yej3"))
+                    # Automatically close the "Понятно" button if it appears
+                    try:
+                        close_button = WebDriverWait(driver, 50).until(
+                            EC.element_to_be_clickable((By.CSS_SELECTOR, "a.introjs-button.introjs-nextbutton.introjs-donebutton"))
+                        )
+                        close_button.click()
+                        print("Закрыто окно 'Понятно'.")
+                    except Exception as e:
+                        print("Кнопка 'Понятно' не найдена или произошла ошибка:", str(e))  
+
+                    driver.refresh()  # Автоматическое обновление браузера
+                    pag.sleep(1)  # Задержка после обновления  
+
+                    # Попробуем кликнуть по элементу перед вводом текста
+                    title_input = WebDriverWait(driver, 50).until(
+                        EC.element_to_be_clickable((By.CSS_SELECTOR, "input[name='#12.value.ru']"))
                     )
-                    title_input = driver.find_element(By.CSS_SELECTOR, "input.x1i10hfl.xggy1nq.xtpw4lu.x1tutvks.x1s3xk63.x1s07b3s.x1kdt53j.x1a2a7pz.xjbqb8w.x1ejq31n.xd10rxx.x1sy0etr.x17r0tee.x9f619.xzsf02u.x1uxerd5.x1fcty0u.x132q4wb.x1a8lsjc.x1pi30zi.x1swvt13.x9desvi.xh8yej3")
-                    title_input.send_keys(title_text)
+                    title_input.click()  # Кликаем по элементу
+
+                    title_input.send_keys(title_text)  # Вставляем текст
+
+                    # Нажимаем на кнопку добавить фото
+                    photo_upload_button = WebDriverWait(driver, 50).until(
+                        EC.element_to_be_clickable((By.CSS_SELECTOR, "label.style_upload__label__7Jg1M[for='upload-photo']"))
+                    )
+                    photo_upload_button.click()  # Кликаем на кнопку добавить фото
+
+                    # Нажимаем на кнопку выбора валюты и выбираем MDL
+                    currency_select = WebDriverWait(driver, 50).until(
+                        EC.element_to_be_clickable((By.CSS_SELECTOR, "select[name='#2.value.unit']"))
+                    )
+                    currency_select.click()  # Кликаем по элементу
+
+                    # Выбираем MDL из выпадающего списка
+                    mdl_option = WebDriverWait(driver, 50).until(
+                        EC.element_to_be_clickable((By.CSS_SELECTOR, "option[value='UNIT_MDL']"))
+                    )
+                    mdl_option.click()  # Кликаем на MDL
                     print("Название вставлено в поле ввода.")
 
-                    button = WebDriverWait(driver, 50).until(
-                        EC.element_to_be_clickable((By.XPATH, "//span[text()='Дополнительная информация']/ancestor::div[@role='button']"))
-                    )
-                    button.click()
-                    pag.press('tab')
-                    pag.sleep(1)
-
-                    # Получаем активный элемент после TAB
-                    active_element = driver.switch_to.active_element
-                    try:
-                        element_id = active_element.get_attribute("id")
-                        element_name = active_element.get_attribute("name")
-                        element_placeholder = active_element.get_attribute("placeholder")
-                        print(f"Атрибуты активного элемента: id={element_id}, name={element_name}, placeholder={element_placeholder}")
-                    except Exception as e:
-                        print(f"Не удалось получить атрибуты активного элемента: {e}")
-
-                    # Теперь можно использовать active_element для ввода текста
-                    active_element.click()
-                    pag.press('enter')
-                    print("Фокус установлен на поле описания через ENTER. Вставляем текст через pag...")
-
-                    pyperclip.copy(description_text)
-                    pag.sleep(0.5)
-                    pag.hotkey('command', 'v')
-                    print("Описание вставлено в поле через буфер обмена и pag.")
-
-                    # Кишинёв мун.(pag.sleep(0.1),
-                    pag.keyDown('shift')
-                    pag.press('tab', presses=1)
-                    pag.keyUp('shift')
-                    pag.press('down', presses=19, interval=0.01)
-                    pag.press('enter')
-                    # MDL
-                    (pag.sleep(1), pag.press('tab', presses=2, interval=0.01),
-                     pag.press('down', presses=3, interval=0.01), pag.press('enter'))
-
-                    (pag.sleep(1), pag.press('tab', presses=2, interval=0.01),
-                     pag.press('down', presses=2, interval=0.01), pag.press('enter'))  # Изменено на 2
-
-                    (pag.sleep(1), pag.keyDown('shift'),
-                     pag.press('tab', presses=2), pag.keyUp('shift'),
-                     pag.sleep(1), pag.press('space'))
-                    (pag.sleep(1),
-                     pag.press('tab', presses=3), pag.keyDown('shift'),
-                     pag.press('tab', presses=2), pag.keyUp('shift'),
-                     pag.sleep(1), pag.press('space'))
-                    (pag.sleep(2),
-                     pag.click(), pag.sleep(2),
-                     pag.press('down', presses=1, interval=0.01), pag.press('down', presses=1, interval=0.01),
-                     pag.keyDown('shift'), pag.press('up', presses=1, interval=0.01),
-                     pag.keyUp('shift'), pag.press('enter'))
-                    pag.sleep(2)
-                    (pag.sleep(1), pag.press('tab', presses=9),
-                     pag.keyDown('shift'), pag.press('tab', presses=1),
-                     pag.keyUp('shift'), pag.sleep(0.1),
-                     pag.press('space'))
-                    (pag.sleep(0.1), pag.press('tab', presses=3),
-                     pag.sleep(0.1), pag.press('space'))
                     conf = pag.confirm("Продолжить?", "Confirmation")
 
                 else:
                     print(f"Кнопка найдена?")
                     return True
+
 
             except Exception:
                 try:
