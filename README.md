@@ -13,6 +13,10 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
+# You can install Pillow (the PIL fork) using:
+# pip install Pillow
+
+from PIL import Image  # Импортируем Image из PIL
 
 # Инициализация WebDriver
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
@@ -186,99 +190,6 @@ def find_and_click(image_path):
 def main():
     while True:
         try:
-            location = pag.locateOnScreen(Wash, confidence=0.11)
-            if location is not None:
-                print(f"Кнопка Wash найдена")
-                # Переход к странице добавления объявления
-                url = "https://999.md/ru/add?category=household-appliances&subcategory=household-appliances%2Fwashing-machines"
-                driver.get(url)
-                pag.sleep(2)
-                # Дополнительная кнопка с атрибутом name="#593.value"
-                dropdown_used = WebDriverWait(driver, 50).until(
-                    EC.element_to_be_clickable((By.CSS_SELECTOR, "select[name='#593.value']"))
-                )
-                dropdown_used.click()
-
-                # Выбор опции "Б/у"
-                option_used = WebDriverWait(driver, 50).until(
-                    EC.element_to_be_clickable((By.CSS_SELECTOR, "option[data-test-id='select-option'][value='6371']"))
-                )
-                option_used.click()
-
-                # Получаем активный элемент после TAB
-                active_element = driver.switch_to.active_element
-                try:
-                    element_id = active_element.get_attribute("id")
-                    element_name = active_element.get_attribute("name")
-                    element_placeholder = active_element.get_attribute("placeholder")
-                    print(f"Атрибуты активного элемента: id={element_id}, name={element_name}, placeholder={element_placeholder}")
-                except Exception as e:
-                    print(f"Не удалось получить атрибуты активного элемента: {e}")
-
-                # Теперь можно использовать active_element для ввода текста
-                active_element.click()
-                pag.press('enter')
-
-                # Получаем активный элемент после TAB
-                active_element = driver.switch_to.active_element
-                try:
-                    element_id = active_element.get_attribute("id")
-                    element_name = active_element.get_attribute("name")
-                    element_placeholder = active_element.get_attribute("placeholder")
-                    print(f"Атрибуты активного элемента: id={element_id}, name={element_name}, placeholder={element_placeholder}")
-                except Exception as e:
-                    print(f"Не удалось получить атрибуты активного элемента: {e}")
-
-                # Теперь можно использовать active_element для ввода текста
-                active_element.click()
-                active_element.send_keys(description_text)
-
-
-                # Wait for the desired option in the dropdown and select it
-                desired_option = WebDriverWait(driver, 20).until(
-                    EC.element_to_be_clickable((By.XPATH, "//span[contains(text(),'Техника')]"))
-                )
-                desired_option.click()
-                print("Текст кнопки:", button.text)
-                button.click()
-
-                # Нажатие на кнопку "Добавить фото"
-                add_photo_button = WebDriverWait(driver, 50).until(
-                    EC.element_to_be_clickable((By.CSS_SELECTOR, "div.x1i10hfl.x1qjc9v5.xjbqb8w.xjqpnuy.xa49m3k.xqeqjp1.x2hbi6w.x13fuv20.xu3j5b3.x1q0q8m5.x26u7qi.x972fbf.xcfux6l.x1qhh985.xm0m39n.x9f619.x1ypdohk.xdl72j9.x2lah0s.xe8uvvx.xdj266r.x11i5rnm.xat24cr.x1mh8g0r.x2lwn1j.xeuugli.xexx8yu.x4uap5.x18d9i69.xkhd6sd.x1n2onr6.x16tdsg8.x1hl2dhg.xggy1nq.x1ja2u2z.x1t137rt.x1o1ewxj.x3x9cwd.x1e5q0jg.x13rtm0m.x1q0g3np.x87ps6o.x1lku1pv.x1a2a7pz.x78zum5.x1iyjqo2[role='button'][tabindex='0']"))
-                )
-                print("Текст кнопки 'Добавить фото':", add_photo_button.text)
-                add_photo_button.click()
-                print("Нажата кнопка: 'Дополнительная информация'")
-                pag.sleep(10)
-
-                # Нажатие на кнопку "Далее" с проверкой кликабельности
-                next_button = WebDriverWait(driver, 50).until(
-                    EC.element_to_be_clickable((By.XPATH, "//span[contains(@class, 'x1lliihq') and text()='Далее']/ancestor::div[@role='none']"))
-                )
-                next_button.click()
-                print("Кнопка 'Далее' нажата.")
-                print("Описание вставлено в поле через буфер обмена и pag.")
-                conf = pag.confirm("Продолжить?", "Confirmation")
-
-                # Ожидание и клик по кнопке для открытия списка
-                dropdown_button = WebDriverWait(driver, 20).until(
-                    EC.element_to_be_clickable((By.ID, "«r28»"))  # Замените на правильный ID или локатор
-                )
-                dropdown_button.click()
-
-                # Ожидание и выбор нужного пункта в списке
-                desired_option = WebDriverWait(driver, 20).until(
-                    EC.element_to_be_clickable((By.XPATH, "//span[text()='Техника']"))  # Замените на правильный текст или локатор
-                )
-                desired_option.click()
-
-            else:
-                print(f"Кнопка найдена?")
-                return True
-
-        except Exception:
-
-            try:
                 location = pag.locateOnScreen(Wash, confidence=0.12)
                 if location is not None:
                     print(f"Кнопка Wash найдена")
@@ -286,6 +197,8 @@ def main():
                     url = "https://999.md/ru/add?category=household-appliances&subcategory=household-appliances%2Fwashing-machines"
                     driver.get(url)
                     pag.sleep(2)
+                    conf = pag.confirm("Продолжить?", "Confirmation")
+
                     try:
                         close_button = WebDriverWait(driver, 5).until(
                             EC.element_to_be_clickable((By.CSS_SELECTOR, "a.introjs-button.introjs-nextbutton.introjs-donebutton"))
@@ -340,33 +253,87 @@ def main():
                             print("Сработал метод: ActionChains click на upload-label")
                         except Exception as e:
                             print("Метод ActionChains click не удался:", e)
-
-                    option = WebDriverWait(driver, 10).until(
-                        EC.element_to_be_clickable((By.CSS_SELECTOR, "option[data-test-id='select-option'][value='6371']"))
+                    conf = pag.confirm("Продолжить?", "Confirmation")
+                    title_input = WebDriverWait(driver, 50).until(
+                        EC.element_to_be_clickable((By.CSS_SELECTOR, "input[name='#12.value.ru']"))
                     )
-                    option.click()
 
-                    # Дополнительная кнопка со стилем ошибки и выбор опции Miele
-                    dropdown_error = WebDriverWait(driver, 10).until(
-                        EC.element_to_be_clickable((By.CSS_SELECTOR, ".style_select__input__h0wAV.style_select__input__error___CkCI"))
-                    )
-                    dropdown_error.click()
+                    title_input.click()  # Кликаем по элементу
 
-                    option_miele = WebDriverWait(driver, 10).until(
-                        EC.element_to_be_clickable((By.CSS_SELECTOR, "option[data-test-id='select-option'][value='8137']"))
-                    )
-                    option_miele.click()
+                    title_input.send_keys(title_text)  # Вставляем текст
 
-                    # Новая кнопка для выбора измерения цены и выбор MDL
-                    measurement_dropdown = WebDriverWait(driver, 10).until(
-                        EC.element_to_be_clickable((By.CSS_SELECTOR, ".style_price__measurement__select__f3t4t"))
-                    )
-                    measurement_dropdown.click()
+                    conf = pag.confirm("Продолжить?", "Confirmation")
 
-                    measurement_option = WebDriverWait(driver, 10).until(
-                        EC.element_to_be_clickable((By.CSS_SELECTOR, "option[value='UNIT_MDL']"))
-                    )
-                    measurement_option.click()
+                else:
+                    print(f"Кнопка найдена?")
+                    return True
+
+        except Exception:
+
+            try:
+                location = pag.locateOnScreen(Wash, confidence=0.12)
+                if location is not None:
+                    print(f"Кнопка Wash найдена")
+                    # Переход к странице добавления объявления
+                    url = "https://999.md/ru/add?category=household-appliances&subcategory=household-appliances%2Fwashing-machines"
+                    driver.get(url)
+                    pag.sleep(2)
+                    conf = pag.confirm("Продолжить?", "Confirmation")
+
+                    try:
+                        close_button = WebDriverWait(driver, 5).until(
+                            EC.element_to_be_clickable((By.CSS_SELECTOR, "a.introjs-button.introjs-nextbutton.introjs-donebutton"))
+                        )
+                        close_button.click()
+                        driver.refresh()  # Автоматическое обновление браузера
+                        pag.sleep(1)  # Задержка после обновления  
+                        print("Закрыто окно 'Понятно'.")
+                    except Exception:
+                        pass
+                        dropdown = WebDriverWait(driver, 10).until(
+                            EC.element_to_be_clickable((By.CSS_SELECTOR, ".style_select__input__h0wAV"))
+                        )
+                        dropdown.click()
+                        try:
+                            upload_label = WebDriverWait(driver, 10).until(
+                                EC.presence_of_element_located((By.CSS_SELECTOR, "label[for='upload-photo']"))
+                            )
+                            # Первая попытка: JavaScript click
+                            try:
+                                driver.execute_script("arguments[0].click();", upload_label)
+                                print("Сработал метод: JavaScript click на upload-label")
+                            except Exception as js_e:
+                                print("Метод click через JavaScript не удался, пробуем ActionChains:", js_e)
+                                # Вторая попытка: ActionChains click
+                                try:
+                                    ActionChains(driver).move_to_element(upload_label).click().perform()
+                                    print("Сработал метод: ActionChains click на upload-label")
+                                except Exception as ac_e:
+                                    print("Метод ActionChains click не удался:", ac_e)
+                        except Exception as e:
+                            print("Не удалось найти элемент upload-photo:", e)
+
+                        # Выбор из выпадающего списка "Кишинёв мун." с проверкой
+                        try:
+                            select_elem = WebDriverWait(driver, 10).until(
+                                EC.presence_of_element_located((By.CSS_SELECTOR, "select.style_select__input__h0wAV[name='#7.value']"))
+                            )
+                            dropdown = Select(select_elem)
+                            dropdown.select_by_visible_text("Кишинёв мун.")
+                            print("Выбран пункт 'Кишинёв мун.' из выпадающего списка")
+                        except Exception as e:
+                            print("Ошибка при выборе из выпадающего списка:", e)
+                        # Попытка 1: Click через JavaScript
+                        # Ждем поле для названия и вставляем название
+                        # Попытка 2: Click через ActionChains
+                        try:
+                            upload_label_ac = WebDriverWait(driver, 10).until(
+                                EC.element_to_be_clickable((By.CSS_SELECTOR, "label[for='upload-photo']"))
+                            )
+                            ActionChains(driver).move_to_element(upload_label_ac).click().perform()
+                            print("Сработал метод: ActionChains click на upload-label")
+                        except Exception as e:
+                            print("Метод ActionChains click не удался:", e)
                     # Попробуем кликнуть по элементу перед вводом текста
                     title_input = WebDriverWait(driver, 50).until(
                         EC.element_to_be_clickable((By.CSS_SELECTOR, "input[name='#12.value.ru']"))
@@ -375,17 +342,6 @@ def main():
 
                     title_input.send_keys(title_text)  # Вставляем текст
 
-                    button = WebDriverWait(driver, 50).until(
-                        EC.element_to_be_clickable((By.XPATH, "//summary[text()='Основные характеристики']"))
-                    )
-                    button.click()
-                    pag.sleep(2)
-
-                    # Wait for the dropdown element and click it
-                    dropdown_button = WebDriverWait(driver, 50).until(
-                        EC.element_to_be_clickable((By.CSS_SELECTOR, "summary.style_collapse__summary__oEdHo"))
-                    )
-                    dropdown_button.click()
                     conf = pag.confirm("Продолжить?", "Confirmation")
 
                 else:
