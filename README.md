@@ -13,9 +13,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
-# You can install Pillow (the PIL fork) using:
-# pip install Pillow
-
+from selenium.webdriver.common.keys import Keys
 from PIL import Image  # Импортируем Image из PIL
 
 # Инициализация WebDriver
@@ -145,7 +143,7 @@ try:
         EC.presence_of_element_located((By.CSS_SELECTOR, "input[placeholder='Введите от 6 символов']"))
     )
     password_input.send_keys(KEY)
-    pag.sleep(5)  # Ждем, чтобы устранить возможные задержки
+    pag.sleep(0.5)  # Ждем, чтобы устранить возможные задержки
 
     # Wait for the "Войти" button and click it
     login_button = WebDriverWait(driver, 10).until(
@@ -170,14 +168,12 @@ try:
     # Navigate to the profile page
 except Exception as e:
     print(f"An error occurred: {str(e)}")
-    print("Current URL:", driver.current_url)
 
 path = ["wash.png", "freeze.png", "/Users/egorceban/PycharmProjects/pythonProject/brave3690/oven.png", "micro.png", "dish.png", "coffee.png"] # Картинки
 Wash = r"/Users/egorceban/PycharmProjects/pythonProject/wash.png"
 def find_and_click(image_path):
     try:
         location = pag.locateOnScreen(image_path, confidence=0.11)
-        pag.sleep(1)
         if location is not None:
             print(f"Кнопка найдена!")
         else:
@@ -186,87 +182,95 @@ def find_and_click(image_path):
         print(f"Ошибка: {e}")
         return False  # Возвращаем False, если произошла ошибка
 
-# Основная функция
+        # Основная функция
 def main():
     while True:
         try:
-                location = pag.locateOnScreen(Wash, confidence=0.12)
-                if location is not None:
-                    print(f"Кнопка Wash найдена")
-                    # Переход к странице добавления объявления
-                    url = "https://999.md/ru/add?category=household-appliances&subcategory=household-appliances%2Fwashing-machines"
-                    driver.get(url)
-                    pag.sleep(2)
-                    conf = pag.confirm("Продолжить?", "Confirmation")
+            location = pag.locateOnScreen(Wash, confidence=0.12)
+            if location is not None:
+                print("Кнопка Wash найдена")
+                # Переход к странице добавления объявления
+                url = "https://999.md/ru/add?category=household-appliances&subcategory=household-appliances%2Fwashing-machines"
+                driver.get(url)
 
-                    try:
-                        close_button = WebDriverWait(driver, 5).until(
-                            EC.element_to_be_clickable((By.CSS_SELECTOR, "a.introjs-button.introjs-nextbutton.introjs-donebutton"))
+                # Закрываем всплывающее окно, если оно появляется
+                try:
+                    close_button = WebDriverWait(driver, 5).until(
+                        EC.element_to_be_clickable(
+                            (By.CSS_SELECTOR, "a.introjs-button.introjs-nextbutton.introjs-donebutton")
                         )
-                        close_button.click()
-                        driver.refresh()  # Автоматическое обновление браузера
-                        pag.sleep(1)  # Задержка после обновления  
-                        print("Закрыто окно 'Понятно'.")
-                    except Exception:
-                        pass
-                        dropdown = WebDriverWait(driver, 10).until(
-                            EC.element_to_be_clickable((By.CSS_SELECTOR, ".style_select__input__h0wAV"))
-                        )
-                        dropdown.click()
-                        try:
-                            upload_label = WebDriverWait(driver, 10).until(
-                                EC.presence_of_element_located((By.CSS_SELECTOR, "label[for='upload-photo']"))
-                            )
-                            # Первая попытка: JavaScript click
-                            try:
-                                driver.execute_script("arguments[0].click();", upload_label)
-                                print("Сработал метод: JavaScript click на upload-label")
-                            except Exception as js_e:
-                                print("Метод click через JavaScript не удался, пробуем ActionChains:", js_e)
-                                # Вторая попытка: ActionChains click
-                                try:
-                                    ActionChains(driver).move_to_element(upload_label).click().perform()
-                                    print("Сработал метод: ActionChains click на upload-label")
-                                except Exception as ac_e:
-                                    print("Метод ActionChains click не удался:", ac_e)
-                        except Exception as e:
-                            print("Не удалось найти элемент upload-photo:", e)
-
-                        # Выбор из выпадающего списка "Кишинёв мун." с проверкой
-                        try:
-                            select_elem = WebDriverWait(driver, 10).until(
-                                EC.presence_of_element_located((By.CSS_SELECTOR, "select.style_select__input__h0wAV[name='#7.value']"))
-                            )
-                            dropdown = Select(select_elem)
-                            dropdown.select_by_visible_text("Кишинёв мун.")
-                            print("Выбран пункт 'Кишинёв мун.' из выпадающего списка")
-                        except Exception as e:
-                            print("Ошибка при выборе из выпадающего списка:", e)
-                        # Попытка 1: Click через JavaScript
-                        # Ждем поле для названия и вставляем название
-                        # Попытка 2: Click через ActionChains
-                        try:
-                            upload_label_ac = WebDriverWait(driver, 10).until(
-                                EC.element_to_be_clickable((By.CSS_SELECTOR, "label[for='upload-photo']"))
-                            )
-                            ActionChains(driver).move_to_element(upload_label_ac).click().perform()
-                            print("Сработал метод: ActionChains click на upload-label")
-                        except Exception as e:
-                            print("Метод ActionChains click не удался:", e)
-                    conf = pag.confirm("Продолжить?", "Confirmation")
-                    title_input = WebDriverWait(driver, 50).until(
-                        EC.element_to_be_clickable((By.CSS_SELECTOR, "input[name='#12.value.ru']"))
                     )
+                    close_button.click()
+                    print("Закрыто окно 'Понятно'.")
+                except Exception:
+                    print("Popup не найден, продолжаем.")
 
-                    title_input.click()  # Кликаем по элементу
+                # Далее выполняем действия для заполнения формы
+                actions = ActionChains(driver)
+                actions.pause(1)
+                # Навигация с помощью TAB и ввод цены
+                for _ in range(3):
+                    actions.send_keys(Keys.TAB)
+                actions.send_keys(Keys.TAB)
+                actions.send_keys(price_text)
+                actions.send_keys(Keys.TAB)
+                for _ in range(3):
+                    actions.send_keys(Keys.ARROW_DOWN)
+                actions.send_keys(Keys.ENTER)
 
-                    title_input.send_keys(title_text)  # Вставляем текст
+                actions.pause(1)
+                for _ in range(2):
+                    actions.send_keys(Keys.TAB)
+                for _ in range(2):
+                    actions.send_keys(Keys.ARROW_DOWN)
+                actions.send_keys(Keys.ENTER)
 
-                    conf = pag.confirm("Продолжить?", "Confirmation")
+                actions.pause(1)
+                for _ in range(3):
+                    actions.send_keys(Keys.TAB)
+                for _ in range(4):
+                    actions.send_keys(Keys.ARROW_DOWN)
+                actions.send_keys(Keys.ENTER)
+                actions.pause(1)
 
-                else:
-                    print(f"Кнопка найдена?")
-                    return True
+                # Выбор из выпадающего списка "Кишинёв мун." с проверкой
+                try:
+                    select_elem = WebDriverWait(driver, 10).until(
+                        EC.presence_of_element_located(
+                            (By.CSS_SELECTOR, "select.style_select__input__h0wAV[name='#7.value']")
+                        )
+                    )
+                    dropdown = Select(select_elem)
+                    dropdown.select_by_visible_text("Кишинёв мун.")
+                    print("Выбран пункт 'Кишинёв мун.' из выпадающего списка")
+                except Exception as e:
+                    print("Ошибка при выборе из выпадающего списка:", e)
+
+                # Отметка галочкой, используя TAB, SHIFT+TAB и SPACE
+                for _ in range(8):
+                    actions.send_keys(Keys.TAB)
+                # Используем SHIFT+TAB для перехода назад
+                actions.key_down(Keys.SHIFT).send_keys(Keys.TAB).key_up(Keys.SHIFT)
+                actions.send_keys(Keys.SPACE)
+                actions.send_keys(Keys.SPACE)
+                for _ in range(3):
+                    actions.send_keys(Keys.TAB)
+                actions.pause(0.1)
+                actions.send_keys(Keys.SPACE)
+                actions.perform()
+
+                # Кликаем по выпадающему списку для продолжения
+                dropdown = WebDriverWait(driver, 10).until(
+                    EC.element_to_be_clickable((By.CSS_SELECTOR, ".style_select__input__h0wAV"))
+                )
+                dropdown.click()
+
+                conf = pag.confirm("Продолжить?", "Confirmation")
+            else:
+                print("Кнопка не найдена.")
+                return True
+        except Exception as e:
+            print("Ошибка в main:", e)
 
         except Exception:
 
@@ -277,8 +281,6 @@ def main():
                     # Переход к странице добавления объявления
                     url = "https://999.md/ru/add?category=household-appliances&subcategory=household-appliances%2Fwashing-machines"
                     driver.get(url)
-                    pag.sleep(2)
-                    conf = pag.confirm("Продолжить?", "Confirmation")
 
                     try:
                         close_button = WebDriverWait(driver, 5).until(
@@ -352,11 +354,7 @@ def main():
             except Exception:
                 try:
 
-                    profile_url = "https://999.md/ru/profile/EgorCeban"
-                    driver.get(profile_url)
-                    pag.sleep(5)
-                    location = pag.locateOnScreen(Wash, confidence=0.99)
-                    pag.sleep(1)
+                    location = pag.locateOnScreen(Wash, confidence=0.13)
                     if location is not None:
                         print(f"Кнопка Wash найдена")
                         # Переход к странице добавления объявления на Marketplace
@@ -404,38 +402,63 @@ def main():
                         pag.hotkey('command', 'v')
                         print("Описание вставлено в поле через буфер обмена и pag.")
 
-                        # Кишинёв мун.(pag.sleep(0.1),
-                        pag.keyDown('shift')
-                        pag.press('tab', presses=1)
-                        pag.keyUp('shift')
-                        pag.press('down', presses=19, interval=0.01)
-                        pag.press('enter')
+                        actions = ActionChains(driver)
+
                         # MDL
-                        (pag.sleep(1), pag.press('tab', presses=2, interval=0.01),
-                         pag.press('down', presses=3, interval=0.01), pag.press('enter'))
+                        actions.pause(1)
+                        for _ in range(2):
+                            actions.send_keys(Keys.TAB)
+                        for _ in range(3):
+                            actions.send_keys(Keys.ARROW_DOWN)
+                        actions.send_keys(Keys.ENTER)
 
-                        (pag.sleep(1), pag.press('tab', presses=2, interval=0.01),
-                         pag.press('down', presses=2, interval=0.01), pag.press('enter'))  # Изменено на 2
+                        actions.pause(1)
+                        for _ in range(2):
+                            actions.send_keys(Keys.TAB)
+                        for _ in range(2):
+                            actions.send_keys(Keys.ARROW_DOWN)
+                        actions.send_keys(Keys.ENTER)
 
-                        (pag.sleep(1), pag.keyDown('shift'),
-                         pag.press('tab', presses=2), pag.keyUp('shift'),
-                         pag.sleep(1), pag.press('space'))
-                        (pag.sleep(1),
-                         pag.press('tab', presses=3), pag.keyDown('shift'),
-                         pag.press('tab', presses=2), pag.keyUp('shift'),
-                         pag.sleep(1), pag.press('space'))
-                        (pag.sleep(2),
-                         pag.click(), pag.sleep(2),
-                         pag.press('down', presses=1, interval=0.01), pag.press('down', presses=1, interval=0.01),
-                         pag.keyDown('shift'), pag.press('up', presses=1, interval=0.01),
-                         pag.keyUp('shift'), pag.press('enter'))
-                        pag.sleep(2)
-                        (pag.sleep(1), pag.press('tab', presses=9),
-                         pag.keyDown('shift'), pag.press('tab', presses=1),
-                         pag.keyUp('shift'), pag.sleep(0.1),
-                         pag.press('space'))
-                        (pag.sleep(0.1), pag.press('tab', presses=3),
-                         pag.sleep(0.1), pag.press('space'))
+                        actions.pause(1)
+                        actions.key_down(Keys.SHIFT)
+                        for _ in range(2):
+                            actions.send_keys(Keys.TAB)
+                        actions.key_up(Keys.SHIFT)
+                        actions.pause(1)
+                        actions.send_keys(Keys.SPACE)
+
+                        actions.pause(1)
+                        for _ in range(3):
+                            actions.send_keys(Keys.TAB)
+                        actions.key_down(Keys.SHIFT)
+                        for _ in range(2):
+                            actions.send_keys(Keys.TAB)
+                        actions.key_up(Keys.SHIFT)
+                        actions.pause(1)
+                        actions.send_keys(Keys.SPACE)
+
+                        actions.pause(2)
+                        actions.click()  # Проводим клик в текущей позиции, если требуется
+                        actions.pause(2)
+                        for _ in range(2):
+                            actions.send_keys(Keys.ARROW_DOWN)
+                        actions.key_down(Keys.SHIFT).send_keys(Keys.ARROW_UP).key_up(Keys.SHIFT)
+                        actions.send_keys(Keys.ENTER)
+
+                        actions.pause(2)
+                        for _ in range(9):
+                            actions.send_keys(Keys.TAB)
+                        actions.key_down(Keys.SHIFT).send_keys(Keys.TAB).key_up(Keys.SHIFT)
+                        actions.pause(0.1)
+                        actions.send_keys(Keys.SPACE)
+
+                        actions.pause(1)
+                        for _ in range(3):
+                            actions.send_keys(Keys.TAB)
+                        actions.pause(0.1)
+                        actions.send_keys(Keys.SPACE)
+
+                        actions.perform()
                         conf = pag.confirm("Продолжить?", "Confirmation")
 
                         # === Micro ===
