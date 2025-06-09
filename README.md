@@ -303,8 +303,11 @@ def main():
                             upload_label_ac = WebDriverWait(driver, 10).until(
                                 EC.element_to_be_clickable((By.CSS_SELECTOR, "label[for='upload-photo']"))
                             )
-#                            ActionChains(driver).move_to_element(upload_label_ac).click().perform()
+
+                            ActionChains(driver).move_to_element(upload_label_ac).click().perform()
                             print("Сработал метод: ActionChains click на upload-label")
+                            conf = pag.confirm("Продолжить?", "Confirmation")
+
                         except Exception as e:
                             print("Метод ActionChains click не удался:", e)
                 else:
