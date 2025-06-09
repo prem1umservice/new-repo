@@ -223,7 +223,6 @@ def main():
                             title_input.send_keys(Keys.TAB)  # Перемещаем фокус к следующему элементу
                             pyperclip.copy(description_text)
                             driver.switch_to.active_element.send_keys(pyperclip.paste())  # Вставляем текст описания
-                            print("Текст описания успешно вставлен с помощью pag.hotkey")
                         except Exception as e:
                             print("Не удалось найти или кликнуть по полю ввода заголовка:", e)
                             title_input = None
@@ -267,7 +266,7 @@ def main():
                             dropdown = Select(select_elem)
                             dropdown.select_by_visible_text("Кишинёв мун.")
                             print("Выбран пункт 'Кишинёв мун.' из выпадающего списка")
-                            dropdown.send_keys(Keys.TAB)  # Перемещаем фокус к следующему элементу
+                            select_elem.send_keys(Keys.TAB)  # Перемещаем фокус к следующему элементу
                             pyperclip.copy(price_text)
                             driver.switch_to.active_element.send_keys(pyperclip.paste())  # Вставляем текст описания
                             dropdown.send_keys(Keys.TAB)  # Перемещаем фокус к следующему элементу
