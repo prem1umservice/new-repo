@@ -269,30 +269,29 @@ def main():
                             select_elem.send_keys(Keys.TAB)  # Перемещаем фокус к следующему элементу
                             pyperclip.copy(price_text)
                             driver.switch_to.active_element.send_keys(pyperclip.paste())  # Вставляем текст описания
-                            dropdown.send_keys(Keys.TAB)  # Перемещаем фокус к следующему элементу
-                            dropdown.send_keys(Keys.ARROW_DOWN)
-                            dropdown.send_keys(Keys.ARROW_DOWN)
-                            dropdown.send_keys(Keys.ARROW_DOWN)
-                            dropdown.send_keys(Keys.ENTER)
-                            dropdown.send_keys(Keys.TAB)  # Перемещаем фокус к следующему элементу
-                            dropdown.send_keys(Keys.TAB)  # Перемещаем фокус к следующему элементу
-                            dropdown.send_keys(Keys.ARROW_DOWN)
-                            dropdown.send_keys(Keys.ARROW_DOWN)
-                            dropdown.send_keys(Keys.ENTER)
-                            dropdown.send_keys(Keys.TAB)  # Перемещаем фокус к следующему элементу
-                            dropdown.send_keys(Keys.ARROW_DOWN)
-                            dropdown.send_keys(Keys.ARROW_DOWN)
-                            dropdown.send_keys(Keys.ENTER)
+                            select_elem.send_keys(Keys.TAB)  # Перемещаем фокус к следующему элементу
+                            select_elem.send_keys(Keys.ARROW_DOWN)
+                            select_elem.send_keys(Keys.ARROW_DOWN)
+                            select_elem.send_keys(Keys.ARROW_DOWN)
+                            select_elem.send_keys(Keys.ENTER)
+                            select_elem.send_keys(Keys.TAB)  # Перемещаем фокус к следующему элементу
+                            select_elem.send_keys(Keys.TAB)  # Перемещаем фокус к следующему элементу
+                            select_elem.send_keys(Keys.ARROW_DOWN)
+                            select_elem.send_keys(Keys.ARROW_DOWN)
+                            select_elem.send_keys(Keys.ENTER)
+                            select_elem.send_keys(Keys.TAB)  # Перемещаем фокус к следующему элементу
+                            select_elem.send_keys(Keys.ARROW_DOWN)
+                            select_elem.send_keys(Keys.ARROW_DOWN)
+                            select_elem.send_keys(Keys.ENTER)
 # Перемещение к полю для ввода цены и вставка введённой цены
-                        # Выбор производителя из выпадающего списка и загрузка
-                            dropdown.send_keys(Keys.TAB)  # Перемещаем фокус к следующему элементу
-                            dropdown.send_keys(Keys.TAB)  # Перемещаем фокус к следующему элементу
-                            dropdown.send_keys(Keys.ARROW_DOWN)
-                            dropdown.send_keys(Keys.ARROW_DOWN)
-                            dropdown.send_keys(Keys.ARROW_DOWN)
-                            dropdown.send_keys(Keys.ARROW_DOWN)
-                            dropdown.send_keys(Keys.ENTER)
-
+# Выбор производителя из выпадающего списка и загрузка
+                            select_elem.send_keys(Keys.TAB)  # Перемещаем фокус к следующему элементу
+                            select_elem.send_keys(Keys.TAB)  # Перемещаем фокус к следующему элементу
+                            select_elem.send_keys(Keys.ARROW_DOWN)
+                            select_elem.send_keys(Keys.ARROW_DOWN)
+                            select_elem.send_keys(Keys.ARROW_DOWN)
+                            select_elem.send_keys(Keys.ARROW_DOWN)
+                            select_elem.send_keys(Keys.ENTER)
                         except Exception as e:
                             print("Ошибка при выборе из выпадающего списка:", e)
                         # Попытка 1: Click через JavaScript
