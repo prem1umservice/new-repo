@@ -13,6 +13,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
 # You can install Pillow (the PIL fork) using:
 # pip install Pillow
 
@@ -211,18 +212,18 @@ def main():
                         try:
 
                         # Попробуем кликнуть по элементу перед вводом текста с использованием JavaScript для надежного клика
-                        title_input = WebDriverWait(driver, 50).until(
+                            title_input = WebDriverWait(driver, 50).until(
                             EC.element_to_be_clickable((By.CSS_SELECTOR, "input[name='#12.value.ru']"))
                         )
-                        print("Поле ввода заголовка найдено.")
-                        driver.execute_script("arguments[0].click();", title_input)
-                        print("Сработал метод: JavaScript click на заголовок")
+
+                            print("Поле ввода заголовка найдено.")
+                            driver.execute_script("arguments[0].click();", title_input)
+                            print("Сработал метод: JavaScript click на заголовок")
                             title_input.send_keys(title_text)  # Вставляем текст
-                            title_input.send_keys(Keys.TAB)  # Перемещаем фокус к следующему элементу   
-                            driver.execute_script("arguments[0].click();", upload_label)
-                            print("Сработал метод: JavaScript click на upload-label")
-                            active_element.send_keys(description_text)  # Вставляем текст описания
-                            print("Текст описания вставлен в поле ввода.")
+                            title_input.send_keys(Keys.TAB)  # Перемещаем фокус к следующему элементу
+                            pyperclip.copy(description_text)
+                            driver.switch_to.active_element.send_keys(pyperclip.paste())  # Вставляем текст описания
+                            print("Текст описания успешно вставлен с помощью pag.hotkey")
                         except Exception as e:
                             print("Не удалось найти или кликнуть по полю ввода заголовка:", e)
                             title_input = None
@@ -245,13 +246,13 @@ def main():
                             )
                             # Первая попытка: JavaScript click
                             try:
-                                driver.execute_script("arguments[0].click();", upload_label)
+#                                driver.execute_script("arguments[0].click();", upload_label)
                                 print("Сработал метод: JavaScript click на upload-label")
                             except Exception as js_e:
                                 print("Метод click через JavaScript не удался, пробуем ActionChains:", js_e)
                                 # Вторая попытка: ActionChains click
                                 try:
-                                    ActionChains(driver).move_to_element(upload_label).click().perform()
+#                                    ActionChains(driver).move_to_element(upload_label).click().perform()
                                     print("Сработал метод: ActionChains click на upload-label")
                                 except Exception as ac_e:
                                     print("Метод ActionChains click не удался:", ac_e)
@@ -266,6 +267,33 @@ def main():
                             dropdown = Select(select_elem)
                             dropdown.select_by_visible_text("Кишинёв мун.")
                             print("Выбран пункт 'Кишинёв мун.' из выпадающего списка")
+                            dropdown.send_keys(Keys.TAB)  # Перемещаем фокус к следующему элементу
+                            pyperclip.copy(price_text)
+                            driver.switch_to.active_element.send_keys(pyperclip.paste())  # Вставляем текст описания
+                            dropdown.send_keys(Keys.TAB)  # Перемещаем фокус к следующему элементу
+                            dropdown.send_keys(Keys.ARROW_DOWN)
+                            dropdown.send_keys(Keys.ARROW_DOWN)
+                            dropdown.send_keys(Keys.ARROW_DOWN)
+                            dropdown.send_keys(Keys.ENTER)
+                            dropdown.send_keys(Keys.TAB)  # Перемещаем фокус к следующему элементу
+                            dropdown.send_keys(Keys.TAB)  # Перемещаем фокус к следующему элементу
+                            dropdown.send_keys(Keys.ARROW_DOWN)
+                            dropdown.send_keys(Keys.ARROW_DOWN)
+                            dropdown.send_keys(Keys.ENTER)
+                            dropdown.send_keys(Keys.TAB)  # Перемещаем фокус к следующему элементу
+                            dropdown.send_keys(Keys.ARROW_DOWN)
+                            dropdown.send_keys(Keys.ARROW_DOWN)
+                            dropdown.send_keys(Keys.ENTER)
+# Перемещение к полю для ввода цены и вставка введённой цены
+                        # Выбор производителя из выпадающего списка и загрузка
+                            dropdown.send_keys(Keys.TAB)  # Перемещаем фокус к следующему элементу
+                            dropdown.send_keys(Keys.TAB)  # Перемещаем фокус к следующему элементу
+                            dropdown.send_keys(Keys.ARROW_DOWN)
+                            dropdown.send_keys(Keys.ARROW_DOWN)
+                            dropdown.send_keys(Keys.ARROW_DOWN)
+                            dropdown.send_keys(Keys.ARROW_DOWN)
+                            dropdown.send_keys(Keys.ENTER)
+
                         except Exception as e:
                             print("Ошибка при выборе из выпадающего списка:", e)
                         # Попытка 1: Click через JavaScript
@@ -275,7 +303,7 @@ def main():
                             upload_label_ac = WebDriverWait(driver, 10).until(
                                 EC.element_to_be_clickable((By.CSS_SELECTOR, "label[for='upload-photo']"))
                             )
-                            ActionChains(driver).move_to_element(upload_label_ac).click().perform()
+#                            ActionChains(driver).move_to_element(upload_label_ac).click().perform()
                             print("Сработал метод: ActionChains click на upload-label")
                         except Exception as e:
                             print("Метод ActionChains click не удался:", e)
@@ -312,9 +340,7 @@ def main():
                             title_input.click()  # Кликаем по элементу
                             title_input.send_keys(title_text)  # Вставляем текст
                             title_input.send_keys(Keys.TAB)  # Перемещаем фокус к следующему элементу   
-                            active_element = driver.switch_to.active_element  # Определяем активный элемент
-                            driver.execute_script("arguments[0].click();", active_element)  # Альтернативный способ клика
-                            active_element.send_keys(description_text)  # Вставляем текст описания
+                            driver.switch_to.active_element.send_keys(description_text)  # Вставляем текст описания
                             print("Текст описания вставлен в поле ввода.")
                         except Exception as e:
                             print("Не удалось найти или кликнуть по полю ввода заголовка:", e)
@@ -335,13 +361,13 @@ def main():
                             )
                             # Первая попытка: JavaScript click
                             try:
-                                driver.execute_script("arguments[0].click();", upload_label)
+#                                driver.execute_script("arguments[0].click();", upload_label)
                                 print("Сработал метод: JavaScript click на upload-label")
                             except Exception as js_e:
                                 print("Метод click через JavaScript не удался, пробуем ActionChains:", js_e)
                                 # Вторая попытка: ActionChains click
                                 try:
-                                    ActionChains(driver).move_to_element(upload_label).click().perform()
+#                                    ActionChains(driver).move_to_element(upload_label).click().perform()
                                     print("Сработал метод: ActionChains click на upload-label")
                                 except Exception as ac_e:
                                     print("Метод ActionChains click не удался:", ac_e)
@@ -354,7 +380,7 @@ def main():
                                 EC.presence_of_element_located((By.CSS_SELECTOR, "select.style_select__input__h0wAV[name='#7.value']"))
                             )
                             dropdown = Select(select_elem)
-                            dropdown.select_by_visible_text("Кишинёв мун.")
+#                            dropdown.select_by_visible_text("Кишинёв мун.")
                             print("Выбран пункт 'Кишинёв мун.' из выпадающего списка")
                         except Exception as e:
                             print("Ошибка при выборе из выпадающего списка:", e)
@@ -365,7 +391,7 @@ def main():
                             upload_label_ac = WebDriverWait(driver, 10).until(
                                 EC.element_to_be_clickable((By.CSS_SELECTOR, "label[for='upload-photo']"))
                             )
-                            ActionChains(driver).move_to_element(upload_label_ac).click().perform()
+#                            ActionChains(driver).move_to_element(upload_label_ac).click().perform()
                             print("Сработал метод: ActionChains click на upload-label")
                         except Exception as e:
                             print("Метод ActionChains click не удался:", e)
