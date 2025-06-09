@@ -267,45 +267,31 @@ def main():
                             dropdown.select_by_visible_text("Кишинёв мун.")
                             print("Выбран пункт 'Кишинёв мун.' из выпадающего списка")
                             
-                            # Перемещаем фокус к полю для ввода цены
-                            price_field = driver.switch_to.active_element
-                            price_field.send_keys(Keys.TAB)
+                            # Перемещаем фокус и вводим цену, используя активный элемент
+                            select_elem.send_keys(Keys.TAB)  
+                            active = driver.switch_to.active_element
                             pyperclip.copy(price_text)
-                            price_field.send_keys(pyperclip.paste())
-                            price_field.send_keys(Keys.TAB)
+                            active.send_keys(pyperclip.paste())
+                            # После ввода цены и первого TAB (после price)
+
+                            # Универсальный способ выбора значений в селектах: TAB до нужного селекта, затем нужное количество ARROW_DOWN и ENTER
+                            tab_counts = [1, 2, 1, 2]         # Количество TAB до каждого селекта
                             
-                            # Работа с первым дополнительным выпадающим списком
-                            manufacturer_field = driver.switch_to.active_element
-                            manufacturer_field.send_keys(Keys.ARROW_DOWN)
-                            manufacturer_field.send_keys(Keys.ARROW_DOWN)
-                            manufacturer_field.send_keys(Keys.ARROW_DOWN)
-                            manufacturer_field.send_keys(Keys.ENTER)
-                            manufacturer_field.send_keys(Keys.TAB)
-                            
-                            # Работа со вторым выпадающим списком
-                            next_field = driver.switch_to.active_element
-                            next_field.send_keys(Keys.TAB)
-                            next_field.send_keys(Keys.ARROW_DOWN)
-                            next_field.send_keys(Keys.ARROW_DOWN)
-                            next_field.send_keys(Keys.ENTER)
-                            next_field.send_keys(Keys.TAB)
-                            
-                            # Работа с третьим выпадающим списком
-                            another_field = driver.switch_to.active_element
-                            another_field.send_keys(Keys.ARROW_DOWN)
-                            another_field.send_keys(Keys.ARROW_DOWN)
-                            another_field.send_keys(Keys.ENTER)
-                            another_field.send_keys(Keys.TAB)
-                            
-                            # Финальное поле выбора (например, выбора производителя)
-                            final_field = driver.switch_to.active_element
-                            final_field.send_keys(Keys.TAB)
-                            final_field.send_keys(Keys.TAB)
-                            final_field.send_keys(Keys.ARROW_DOWN)
-                            final_field.send_keys(Keys.ARROW_DOWN)
-                            final_field.send_keys(Keys.ARROW_DOWN)
-                            final_field.send_keys(Keys.ARROW_DOWN)
-                            final_field.send_keys(Keys.ENTER)
+                            down_counts = [3, 2, 2, 4]        # Сколько раз нажать ARROW_DOWN для выбора нужного значения
+                            for tab_count, down_count in zip(tab_counts, down_counts):
+
+                                for _ in range(tab_count):
+                                    active.send_keys(Keys.TAB)
+                                    active = driver.switch_to.active_element
+                            # Открываем селект, если он кастомный (по необходимости)
+                            active.send_keys(Keys.SPACE)  # или active.click(), если требуется клик
+                            # Выбираем нужный пункт
+                            for _ in range(down_count):
+                                active.send_keys(Keys.ARROW_DOWN)
+                            active.send_keys(Keys.ENTER)
+
+                        except Exception as e:
+                            print("Ошибка при выборе из выпадающего списка:", e)
                         except Exception as e:
                             print("Ошибка при выборе из выпадающего списка:", e)
                         # Попытка 1: Click через JavaScript
