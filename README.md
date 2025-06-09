@@ -266,32 +266,46 @@ def main():
                             dropdown = Select(select_elem)
                             dropdown.select_by_visible_text("Кишинёв мун.")
                             print("Выбран пункт 'Кишинёв мун.' из выпадающего списка")
-                            select_elem.send_keys(Keys.TAB)  # Перемещаем фокус к следующему элементу
+                            
+                            # Перемещаем фокус к полю для ввода цены
+                            price_field = driver.switch_to.active_element
+                            price_field.send_keys(Keys.TAB)
                             pyperclip.copy(price_text)
-                            driver.switch_to.active_element.send_keys(pyperclip.paste())  # Вставляем текст описания
-                            select_elem.send_keys(Keys.TAB)  # Перемещаем фокус к следующему элементу
-                            select_elem.send_keys(Keys.ARROW_DOWN)
-                            select_elem.send_keys(Keys.ARROW_DOWN)
-                            select_elem.send_keys(Keys.ARROW_DOWN)
-                            select_elem.send_keys(Keys.ENTER)
-                            select_elem.send_keys(Keys.TAB)  # Перемещаем фокус к следующему элементу
-                            select_elem.send_keys(Keys.TAB)  # Перемещаем фокус к следующему элементу
-                            select_elem.send_keys(Keys.ARROW_DOWN)
-                            select_elem.send_keys(Keys.ARROW_DOWN)
-                            select_elem.send_keys(Keys.ENTER)
-                            select_elem.send_keys(Keys.TAB)  # Перемещаем фокус к следующему элементу
-                            select_elem.send_keys(Keys.ARROW_DOWN)
-                            select_elem.send_keys(Keys.ARROW_DOWN)
-                            select_elem.send_keys(Keys.ENTER)
-# Перемещение к полю для ввода цены и вставка введённой цены
-# Выбор производителя из выпадающего списка и загрузка
-                            select_elem.send_keys(Keys.TAB)  # Перемещаем фокус к следующему элементу
-                            select_elem.send_keys(Keys.TAB)  # Перемещаем фокус к следующему элементу
-                            select_elem.send_keys(Keys.ARROW_DOWN)
-                            select_elem.send_keys(Keys.ARROW_DOWN)
-                            select_elem.send_keys(Keys.ARROW_DOWN)
-                            select_elem.send_keys(Keys.ARROW_DOWN)
-                            select_elem.send_keys(Keys.ENTER)
+                            price_field.send_keys(pyperclip.paste())
+                            price_field.send_keys(Keys.TAB)
+                            
+                            # Работа с первым дополнительным выпадающим списком
+                            manufacturer_field = driver.switch_to.active_element
+                            manufacturer_field.send_keys(Keys.ARROW_DOWN)
+                            manufacturer_field.send_keys(Keys.ARROW_DOWN)
+                            manufacturer_field.send_keys(Keys.ARROW_DOWN)
+                            manufacturer_field.send_keys(Keys.ENTER)
+                            manufacturer_field.send_keys(Keys.TAB)
+                            
+                            # Работа со вторым выпадающим списком
+                            next_field = driver.switch_to.active_element
+                            next_field.send_keys(Keys.TAB)
+                            next_field.send_keys(Keys.ARROW_DOWN)
+                            next_field.send_keys(Keys.ARROW_DOWN)
+                            next_field.send_keys(Keys.ENTER)
+                            next_field.send_keys(Keys.TAB)
+                            
+                            # Работа с третьим выпадающим списком
+                            another_field = driver.switch_to.active_element
+                            another_field.send_keys(Keys.ARROW_DOWN)
+                            another_field.send_keys(Keys.ARROW_DOWN)
+                            another_field.send_keys(Keys.ENTER)
+                            another_field.send_keys(Keys.TAB)
+                            
+                            # Финальное поле выбора (например, выбора производителя)
+                            final_field = driver.switch_to.active_element
+                            final_field.send_keys(Keys.TAB)
+                            final_field.send_keys(Keys.TAB)
+                            final_field.send_keys(Keys.ARROW_DOWN)
+                            final_field.send_keys(Keys.ARROW_DOWN)
+                            final_field.send_keys(Keys.ARROW_DOWN)
+                            final_field.send_keys(Keys.ARROW_DOWN)
+                            final_field.send_keys(Keys.ENTER)
                         except Exception as e:
                             print("Ошибка при выборе из выпадающего списка:", e)
                         # Попытка 1: Click через JavaScript
