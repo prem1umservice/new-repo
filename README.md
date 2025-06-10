@@ -174,7 +174,7 @@ except Exception as e:
     print("Current URL:", driver.current_url)
 
 path = ["wash.png", "freeze.png", "/Users/egorceban/PycharmProjects/pythonProject/brave3690/oven.png", "micro.png", "dish.png", "coffee.png"] # Картинки
-Wash = r"/Users/egorceban/PycharmProjects/pythonProject/wash.png"
+Wash = r"C:\Program Files\JetBrains\PyCharm 2023.3.4\FB.create\wash.png"
 def find_and_click(image_path):
     try:
         location = pag.locateOnScreen(image_path, confidence=0.11)
@@ -276,19 +276,21 @@ def main():
 
                             # Универсальный способ выбора значений в селектах: TAB до нужного селекта, затем нужное количество ARROW_DOWN и ENTER
                             tab_counts = [1, 2, 1, 2]         # Количество TAB до каждого селекта
-                            
-                            down_counts = [3, 2, 2, 4]        # Сколько раз нажать ARROW_DOWN для выбора нужного значения
-                            for tab_count, down_count in zip(tab_counts, down_counts):
+                            down_counts = [2, 1, 1, 3]        # Сколько раз нажать ARROW_DOWN для выбора нужного значения
 
+                            for tab_count, down_count in zip(tab_counts, down_counts):
+                                # Перемещаем фокус к селекту с помощью TAB
                                 for _ in range(tab_count):
                                     active.send_keys(Keys.TAB)
                                     active = driver.switch_to.active_element
-                            # Открываем селект, если он кастомный (по необходимости)
-                            active.send_keys(Keys.SPACE)  # или active.click(), если требуется клик
-                            # Выбираем нужный пункт
-                            for _ in range(down_count):
-                                active.send_keys(Keys.ARROW_DOWN)
-                            active.send_keys(Keys.ENTER)
+
+                                # Выбираем нужный пункт с помощью ARROW_DOWN
+                                for _ in range(down_count):
+                                    active.send_keys(Keys.ARROW_DOWN)
+
+                                # Подтверждаем выбор с помощью ENTER
+                                active.send_keys(Keys.ENTER)
+                                print("Элемент выбран с помощью ARROW_DOWN и ENTER.")
 
                         except Exception as e:
                             print("Ошибка при выборе из выпадающего списка:", e)
@@ -301,10 +303,23 @@ def main():
                             upload_label_ac = WebDriverWait(driver, 10).until(
                                 EC.element_to_be_clickable((By.CSS_SELECTOR, "label[for='upload-photo']"))
                             )
+                            
 
                             ActionChains(driver).move_to_element(upload_label_ac).click().perform()
+
                             print("Сработал метод: ActionChains click на upload-label")
+
                             conf = pag.confirm("Продолжить?", "Confirmation")
+                            
+                        # Locate and click the agreement checkbox
+                            agreement_checkbox = WebDriverWait(driver, 10).until(
+                            EC.element_to_be_clickable((By.CSS_SELECTOR, "input#agreement"))
+                        )
+                            agreement_checkbox.click()
+                            print("Agreement checkbox clicked.")
+                            conf = pag.confirm("Продолжить?", "Confirmation")
+
+
 
                         except Exception as e:
                             print("Метод ActionChains click не удался:", e)
