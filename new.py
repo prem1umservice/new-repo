@@ -204,42 +204,44 @@ def main():
 
                 for _ in range(2):  # Цикл для двух нажатий клавиши Tab
                     button.send_keys(Keys.SHIFT + Keys.TAB)  # Нажатие клавиши Shift + Tab
-                button.click()                
-                button.send_keys(Keys.SPACE)  # Нажатие клавиши Tab  description_field = button.send_keys(Keys.SHIFT)  # Отпустить клавишу Shift
+                    active = driver.switch_to.active_element  # Получаем активный элемент
+                    if active.get_attribute('aria-pressed') == 'true' or 'x78zum5' in active.get_attribute('class') or 'xh8yej3' in active.get_attribute('class'):
+                        active.click()
 
                 for _ in range(3):  # Цикл для двух нажатий клавиши Tab
-                    button.send_keys(Keys.DOWN)  # Нажатие клавиши Tab  description_field = button.send_keys(Keys.SHIFT)  # Отпустить клавишу Shift
+                    active.send_keys(Keys.ARROW_DOWN)  # Нажатие клавиши Tab  description_field = button.send_keys(Keys.SHIFT)  # Отпустить клавишу Shift
                 # Нажатие клавиши Tab  description_field = button.send_keys(Keys.SHIFT)  # Отпустить клавишу Shift
-                # Проверяем, была ли нажата кнопка после Shift + Tab
-                button.send_keys(Keys.SPACE)  # Нажатие клавиши Space
-                if button.is_displayed() and button.is_enabled():
-                    print("Кнопка активна после нажатия Shift + Tab.")
-                    # Проверяем аргумент с помощью JavaScript
-                    is_active = driver.execute_script("return arguments[0].getAttribute('aria-pressed')", button)
-                    if is_active == "true":
-                        print("Кнопка активна согласно атрибуту 'aria-pressed'.")
-                    else:
-                        print("Кнопка не активна согласно атрибуту 'aria-pressed'.")
-                else:
-                    print("Кнопка не активна после нажатия Shift + Tab.")
+                active.send_keys(Keys.ENTER)  # Нажатие клавиши Space
+                active.send_keys(Keys.SHIFT + Keys.TAB)  # Нажатие клавиши Shift + Tab
+                active1 = driver.switch_to.active_element  # Получаем активный элемент
+                print("Активный элемент:", active1.text, active1.get_attribute('aria-pressed'), active1.get_attribute('class'))
+                active1.click()
 
-                for _ in range(4):  # Цикл для двух нажатий клавиши Tab
-                    button.send_keys(Keys.TAB)  # Нажатие клавиши Tab  description_field = button.send_keys(Keys.SHIFT)  # Отпустить клавишу Shift
-                button.send_keys(Keys.ENTER)  # Нажатие клавиши Tab  description_field = button.send_keys(Keys.SHIFT)  # Отпустить клавишу Shift
-                button.send_keys(Keys.SHIFT + Keys.TAB)  # Нажатие клавиши Shift + Tab
-                button.send_keys(Keys.SHIFT)  # Отпустить клавишу Shift  
+                for _ in range(4):  # Цикл для нажатий клавиши Tab
+                    active1.send_keys(Keys.ARROW_TAB)  # Нажатие клавиши Tab  description_field = button.send_keys(Keys.SHIFT)  # Отпустить клавишу Shift
+
+                active1.send_keys(Keys.ENTER)  # Нажатие клавиши Tab  description_field = button.send_keys(Keys.SHIFT)  # Отпустить клавишу Shift
+                active1.send_keys(Keys.SHIFT + Keys.TAB)  # Нажатие клавиши Shift + Tab
+                price = driver.switch_to.active_element  # Получаем активный элемент
+                print("Активный элемент:", price.text, price.get_attribute('aria-pressed'), price.get_attribute('class'))
+                price.click()
+
                 pyperclip.copy(price_text)  # Копируем текст цены в буфер обмена
-                driver.switch_to.active_element.send_keys(pyperclip.paste())  # Вставляем текст из буфера обмена  button.send_keys(Keys.SHIFT + Keys.TAB)  # Нажатие клавиши Shift + Tab                
-                button.send_keys(Keys.SHIFT + Keys.TAB)  # Нажатие клавиши Shift + Tab
-                button.send_keys(Keys.SHIFT)  # Отпустить клавишу Shift  
+                driver.switch_to.active_element.send_keys(pyperclip.paste())  # Вставляем текст из буфера обмена  button.send_keys(Keys.SHIFT + Keys.TAB)  # Нажатие клавиши Shift + Tab
+                price.send_keys(Keys.SHIFT + Keys.TAB)  # Нажатие клавиши Shift + Tab
+                title_text = driver.switch_to.active_element  # Получаем активный элемент
+                print("Активный элемент:", title_text.text, title_text.get_attribute('aria-pressed'), title_text.get_attribute('class'))
 
                 pyperclip.copy(title_text)  # Копируем текст цены в буфер обмена
                 driver.switch_to.active_element.send_keys(pyperclip.paste())  # Вставляем текст из буфера обмена  button.send_keys(Keys.SHIFT + Keys.TAB)  # Нажатие клавиши Shift + Tab                
 
                 for _ in range(3):  # Цикл для двух нажатий клавиши Tab
-                                    button.send_keys(Keys.SHIFT + Keys.TAB)  # Нажатие клавиши Shift + Tab
-                button.send_keys(Keys.SHIFT)  # Отпустить клавишу Shift  
-                button.send_keys(Keys.ENTER)  # Нажатие клавиши Tab  description_field = button.send_keys(Keys.SHIFT)  # Отпустить клавишу Shift
+                    title_text.send_keys(Keys.SHIFT + Keys.TAB)  # Нажатие клавиши Shift + Tab
+                photo = driver.switch_to.active_element  # Получаем активный элемент
+                print("Активный элемент:", photo.text, photo.get_attribute('aria-pressed'), photo.get_attribute('class'))
+                photo.click()
+
+                photo.send_keys(Keys.ENTER)  # Нажатие клавиши Tab  description_field = button.send_keys(Keys.SHIFT)  # Отпустить клавишу Shift
                 pag.sleep(2)  # Ждем, чтобы устранить возможные задержки
                 # Загрузка изображений
                  # Нажатие на кнопку "Далее" с проверкой кликабельностиAdd commentMore actions
@@ -255,8 +257,13 @@ def main():
 
         except Exception:
             error = pag.confirm("Произошла ошибка. Продолжить?", "Error")
-            сontinue
-
+            if error == "OK":
+                print("Продолжение работы программы.")
+                pass
+            else:
+                print("Программа завершена.")
+                driver.quit()
+                return False
 
 if __name__ == "__main__":
     main()
