@@ -11,6 +11,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 
 # Инициализация WebDriver
@@ -169,24 +170,15 @@ except Exception as e:
     print(f"An error occurred: {str(e)}")
 
 path = ["wash.png", "/Users/egorceban/PycharmProjects/pythonProject/brave3690/freeze.png", "/Users/egorceban/PycharmProjects/pythonProject/brave3690/oven.png", "micro.png", "dish.png", "coffee.png"] # Картинки
-Wash = r"/Users/egorceban/PycharmProjects/pythonProject/wash.png"
+Wash = r"C:\Program Files\JetBrains\PyCharm 2023.3.4\FB.create\wash.png"
 Freeze, Oven, Micro, Dish, Coffee = "freeze.png", "oven.png", "micro.png", "dish.png", "coffee.png" # Картинки
-def find_and_click(image_path):
-    try:
-        location = pag.locateOnScreen(image_path, confidence=0.11)
-        pag.sleep(1)
-        if location is not None:
-            print(f"Кнопка найдена!")
-        else:
-            print(f"Кнопка '{image_path}' не найдена.")
-    except Exception as e:
-        print(f"Ошибка: {e}")
-        return False  # Возвращаем False, если произошла ошибка
 
 # Основная функция
 def main():
     while True:
         try:
+            conf = pag.confirm("Продолжить?", "Confirmation")
+
             washing_link = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((
                     By.XPATH,
@@ -198,110 +190,73 @@ def main():
                 # Переход к странице добавления объявления
                 url = "https://www.facebook.com/marketplace/create/item"
                 driver.get(url)
-                pag.sleep(1)  # Задержка 1 секунда перед следующим элементом
-
-                # Wait for the page containing the input field for the title
-                WebDriverWait(driver, 20).until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR, "input.x1i10hfl.xggy1nq.xtpw4lu.x1tutvks.x1s3xk63.x1s07b3s.x1kdt53j.x1a2a7pz.xjbqb8w.x1ejq31n.xd10rxx.x1sy0etr.x17r0tee.x9f619.xzsf02u.x1uxerd5.x1fcty0u.x132q4wb.x1a8lsjc.x1pi30zi.x1swvt13.x9desvi.xh8yej3"))
-                )
-                title_input = driver.find_element(By.CSS_SELECTOR, "input.x1i10hfl.xggy1nq.xtpw4lu.x1tutvks.x1s3xk63.x1s07b3s.x1kdt53j.x1a2a7pz.xjbqb8w.x1ejq31n.xd10rxx.x1sy0etr.x17r0tee.x9f619.xzsf02u.x1uxerd5.x1fcty0u.x132q4wb.x1a8lsjc.x1pi30zi.x1swvt13.x9desvi.xh8yej3")
-                title_input.send_keys(title_text)
-                print("Название вставлено в поле ввода.")
-
-                pag.sleep(1)
 
                 button = WebDriverWait(driver, 30).until(
                     EC.element_to_be_clickable((By.XPATH, "//span[text()='Дополнительная информация']/ancestor::div[@role='button']"))
                 )
                 print("Текст кнопки:", button.text)
-                button.click()
-                print("Нажата кнопка: 'Дополнительная информация'")
+                button.click()                
+                button.send_keys(Keys.TAB)  # Нажатие клавиши Tab
+                pyperclip.copy(description_text)  # Копируем текст цены в буфер обмена
+                driver.switch_to.active_element.send_keys(pyperclip.paste())  # Вставляем текст из буфера обмена  button.send_keys(Keys.SHIFT + Keys.TAB)  # Нажатие клавиши Shift + Tab                
+                pag.sleep(2)  # Ждем, чтобы устранить возможные задержки
+                pag.sleep(2)  # Ждем, чтобы устранить возможные задержки
 
+                for _ in range(2):  # Цикл для двух нажатий клавиши Tab
+                    button.send_keys(Keys.SHIFT + Keys.TAB)  # Нажатие клавиши Shift + Tab
+                button.click()                
+                button.send_keys(Keys.SPACE)  # Нажатие клавиши Tab  description_field = button.send_keys(Keys.SHIFT)  # Отпустить клавишу Shift
 
+                for _ in range(3):  # Цикл для двух нажатий клавиши Tab
+                    button.send_keys(Keys.DOWN)  # Нажатие клавиши Tab  description_field = button.send_keys(Keys.SHIFT)  # Отпустить клавишу Shift
+                # Нажатие клавиши Tab  description_field = button.send_keys(Keys.SHIFT)  # Отпустить клавишу Shift
+                # Проверяем, была ли нажата кнопка после Shift + Tab
+                button.send_keys(Keys.SPACE)  # Нажатие клавиши Space
+                if button.is_displayed() and button.is_enabled():
+                    print("Кнопка активна после нажатия Shift + Tab.")
+                    # Проверяем аргумент с помощью JavaScript
+                    is_active = driver.execute_script("return arguments[0].getAttribute('aria-pressed')", button)
+                    if is_active == "true":
+                        print("Кнопка активна согласно атрибуту 'aria-pressed'.")
+                    else:
+                        print("Кнопка не активна согласно атрибуту 'aria-pressed'.")
+                else:
+                    print("Кнопка не активна после нажатия Shift + Tab.")
+
+                for _ in range(4):  # Цикл для двух нажатий клавиши Tab
+                    button.send_keys(Keys.TAB)  # Нажатие клавиши Tab  description_field = button.send_keys(Keys.SHIFT)  # Отпустить клавишу Shift
+                button.send_keys(Keys.ENTER)  # Нажатие клавиши Tab  description_field = button.send_keys(Keys.SHIFT)  # Отпустить клавишу Shift
+                button.send_keys(Keys.SHIFT + Keys.TAB)  # Нажатие клавиши Shift + Tab
+                button.send_keys(Keys.SHIFT)  # Отпустить клавишу Shift  
+                pyperclip.copy(price_text)  # Копируем текст цены в буфер обмена
+                driver.switch_to.active_element.send_keys(pyperclip.paste())  # Вставляем текст из буфера обмена  button.send_keys(Keys.SHIFT + Keys.TAB)  # Нажатие клавиши Shift + Tab                
+                button.send_keys(Keys.SHIFT + Keys.TAB)  # Нажатие клавиши Shift + Tab
+                button.send_keys(Keys.SHIFT)  # Отпустить клавишу Shift  
+
+                pyperclip.copy(title_text)  # Копируем текст цены в буфер обмена
+                driver.switch_to.active_element.send_keys(pyperclip.paste())  # Вставляем текст из буфера обмена  button.send_keys(Keys.SHIFT + Keys.TAB)  # Нажатие клавиши Shift + Tab                
+
+                for _ in range(3):  # Цикл для двух нажатий клавиши Tab
+                                    button.send_keys(Keys.SHIFT + Keys.TAB)  # Нажатие клавиши Shift + Tab
+                button.send_keys(Keys.SHIFT)  # Отпустить клавишу Shift  
+                button.send_keys(Keys.ENTER)  # Нажатие клавиши Tab  description_field = button.send_keys(Keys.SHIFT)  # Отпустить клавишу Shift
+                pag.sleep(2)  # Ждем, чтобы устранить возможные задержки
+                # Загрузка изображений
+                 # Нажатие на кнопку "Далее" с проверкой кликабельностиAdd commentMore actions
+                next_button = WebDriverWait(driver, 50).until(
+                    EC.element_to_be_clickable((By.XPATH, "//span[contains(@class, 'x1lliihq') and text()='Далее']/ancestor::div[@role='none']"))
+                )
+                next_button.click()
+                print("Кнопка 'Далее' нажата.")
 
             else:
                 print(f"Кнопка найдена?")
                 return True
 
         except Exception:
+            error = pag.confirm("Произошла ошибка. Продолжить?", "Error")
+            сontinue
 
-            try:
-                washing_link = WebDriverWait(driver, 10).until(
-                    EC.presence_of_element_located((
-                    By.XPATH,
-                    "//a[@itemprop='item' and contains(@href, '/ru/list/household-appliances/washing-machines')]//span[@itemprop='name' and text()='Стиральные и сушильные машины']"
-                    ))
-                )
-                if washing_link:
-                    print(f"Кнопка найдена")
-                    # Переход к странице добавления объявления на Marketplace
-                    url = "https://www.facebook.com/marketplace/create/item"
-                    driver.get(url)
-                    pag.sleep(1)
-                    button = WebDriverWait(driver, 50).until(
-                        EC.element_to_be_clickable((By.XPATH, "//span[text()='Дополнительная информация']/ancestor::div[@role='button']"))
-                    )
-                    button.click()
-                    pag.press('tab')
-                    pag.sleep(1)
-
-                    # Получаем активный элемент после TAB
-                    active_element = driver.switch_to.active_element
-                    try:
-                        element_id = active_element.get_attribute("id")
-                        element_name = active_element.get_attribute("name")
-                        element_placeholder = active_element.get_attribute("placeholder")
-                        print(f"Атрибуты активного элемента: id={element_id}, name={element_name}, placeholder={element_placeholder}")
-                    except Exception as e:
-                        print(f"Не удалось получить атрибуты активного элемента: {e}")
-
-                    # Теперь можно использовать active_element для ввода текста
-                    active_element.click()
-                    pag.press('enter')
-                    print("Фокус установлен на поле описания через ENTER. Вставляем текст через pag...")
-
-                else:
-                    print(f"Кнопка найдена?")
-                    return True
-
-            except Exception:
-                try:
-                    washing_link = WebDriverWait(driver, 10).until(
-                        EC.presence_of_element_located((
-                            By.XPATH,
-                            "//a[@itemprop='item' and contains(@href, '/ru/list/household-appliances/washing-machines')]//span[@itemprop='name' and text()='Стиральные и сушильные машины']"
-                            ))
-                        )
-                    
-                    if washing_link:
-                        print(f"Кнопка найдена")
-                        # Переход к странице добавления объявления на Marketplace
-                        url = "https://www.facebook.com/marketplace/create/item"
-                        driver.get(url)
-                        pag.sleep(1)
-
-                        try:
-                            desc_input_locator = (By.ID, "«rfp»")
-                            desc_input_field = WebDriverWait(driver, 50).until(
-                                EC.element_to_be_clickable(desc_input_locator)
-                            )
-                            print("Поле описания найдено и кликабельно.")
-
-                            # Шаг 3: Вставка текста в поле описания
-                            desc_input_field.send_keys(description_text)
-                            print(f"Текст '{description_text}' вставлен в поле описания.")
-
-                        except Exception as e:
-                            print(f"Ошибка при взаимодействии с полем описания: {e}")
-                            # Здесь можно добавить логику для повторной попытки или завершения скрипта
-                        print("Текст поля описания:", desc_input.get_attribute("aria-label") or desc_input.get_attribute("placeholder") or desc_input.get_attribute("id"))
-                        desc_input.click()
-                        pag.press('enter')
-                        print("Фокус установлен на поле описания через TAB и ENTER. Вставляем текст через pag...")
-
-                except Exception as error:
-                    print(f"Произошла ошибка: {error}")
-                    continue
 
 if __name__ == "__main__":
     main()
