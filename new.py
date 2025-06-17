@@ -206,11 +206,12 @@ def main():
                 # Нажатие клавиши Tab  description_field = button.send_keys(Keys.SHIFT)  # Отпустить клавишу Shift
                 driver.switch_to.active_element.send_keys(Keys.ENTER)  # Нажатие клавиши Space
                 driver.switch_to.active_element.send_keys(Keys.SHIFT + Keys.TAB)  # Нажатие клавиши Shift + Tab
-                driver.switch_to.active_element.click  # Получаем активный элемент
+                state = driver.switch_to.active_element  # Получаем активный элемент
+                state.click()  # Кликаем по активному элементу
                 for _ in range(4):  # Цикл для нажатий клавиши Tab
-                    driver.switch_to.active_element.send_keys(Keys.TAB)  # Нажатие клавиши Tab  description_field = button.send_keys(Keys.SHIFT)  # Отпустить клавишу Shift
+                    pag.press('tab', interval=0.1)  # Нажатие клавиши Tab с использованием pyautogui
 
-                driver.switch_to.active_element.send_keys(Keys.ENTER)  # Нажатие клавиши Tab  description_field = button.send_keys(Keys.SHIFT)  # Отпустить клавишу Shift
+                pag.press('enter')  # Нажатие клавиши Enter с использованием pyautogui
                 driver.switch_to.active_element.send_keys(Keys.SHIFT + Keys.TAB)  # Нажатие клавиши Shift + Tab
                 driver.switch_to.active_element  # Получаем активный элемент
                 print("Активный элемент:", driver.switch_to.active_element.text, driver.switch_to.active_element.get_attribute('aria-pressed'), driver.switch_to.active_element.get_attribute('class'))
