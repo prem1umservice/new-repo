@@ -1,4 +1,3 @@
-
 import os
 import shutil
 import requests
@@ -178,15 +177,8 @@ def main():
     while True:
         try:
             conf = pag.confirm("Продолжить?", "Confirmation")
-
-            washing_link = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((
-                    By.XPATH,
-                    "//a[@itemprop='item' and contains(@href, '/ru/list/household-appliances/washing-machines')]//span[@itemprop='name' and text()='Стиральные и сушильные машины']"
-                    ))
-                )
-            if washing_link:
-                print(f"Кнопка найдена")
+            if conf == "OK":
+                print("Продолжение работы программы.")            
                 # Переход к странице добавления объявления
                 url = "https://www.facebook.com/marketplace/create/item"
                 driver.get(url)
@@ -195,6 +187,7 @@ def main():
                     EC.element_to_be_clickable((By.XPATH, "//span[text()='Дополнительная информация']/ancestor::div[@role='button']"))
                 )
                 print("Текст кнопки:", button.text)
+                driver.execute_script("arguments[0].style.display = 'block';", button)
                 button.click()                
                 button.send_keys(Keys.TAB)  # Нажатие клавиши Tab
                 pyperclip.copy(description_text)  # Копируем текст цены в буфер обмена
@@ -211,14 +204,11 @@ def main():
                 for _ in range(3):  # Цикл для двух нажатий клавиши Tab
                     active.send_keys(Keys.ARROW_DOWN)  # Нажатие клавиши Tab  description_field = button.send_keys(Keys.SHIFT)  # Отпустить клавишу Shift
                 # Нажатие клавиши Tab  description_field = button.send_keys(Keys.SHIFT)  # Отпустить клавишу Shift
-                active.driver.switch_to.active_element.send_keys(Keys.ENTER)  # Нажатие клавиши Space
+                driver.switch_to.active_element.send_keys(Keys.ENTER)  # Нажатие клавиши Space
                 driver.switch_to.active_element.send_keys(Keys.SHIFT + Keys.TAB)  # Нажатие клавиши Shift + Tab
-                driver.switch_to.active_element  # Получаем активный элемент
-                print("Активный элемент:", driver.switch_to.active_element.text, driver.switch_to.active_element.get_attribute('aria-pressed'), driver.switch_to.active_element.get_attribute('class'))
-                driver.switch_to.active_element.click()
-
+                driver.switch_to.active_element.click  # Получаем активный элемент
                 for _ in range(4):  # Цикл для нажатий клавиши Tab
-                    driver.switch_to.active_element.send_keys(Keys.ARROW_TAB)  # Нажатие клавиши Tab  description_field = button.send_keys(Keys.SHIFT)  # Отпустить клавишу Shift
+                    driver.switch_to.active_element.send_keys(Keys.TAB)  # Нажатие клавиши Tab  description_field = button.send_keys(Keys.SHIFT)  # Отпустить клавишу Shift
 
                 driver.switch_to.active_element.send_keys(Keys.ENTER)  # Нажатие клавиши Tab  description_field = button.send_keys(Keys.SHIFT)  # Отпустить клавишу Shift
                 driver.switch_to.active_element.send_keys(Keys.SHIFT + Keys.TAB)  # Нажатие клавиши Shift + Tab
@@ -232,7 +222,7 @@ def main():
                 driver.switch_to.active_element  # Получаем активный элемент
                 print("Активный элемент:", driver.switch_to.active_element.text, driver.switch_to.active_element.get_attribute('aria-pressed'), driver.switch_to.active_element.get_attribute('class'))
 
-                pyperclip.copy(driver.switch_to.active_element)  # Копируем текст цены в буфер обмена
+                pyperclip.copy(title_text)  # Копируем текст цены в буфер обмена
                 driver.switch_to.active_element.send_keys(pyperclip.paste())  # Вставляем текст из буфера обмена  button.send_keys(Keys.SHIFT + Keys.TAB)  # Нажатие клавиши Shift + Tab
 
                 for _ in range(3):  # Цикл для двух нажатий клавиши Tab
@@ -241,8 +231,7 @@ def main():
                 print("Активный элемент:", driver.switch_to.active_element.text, driver.switch_to.active_element.get_attribute('aria-pressed'), driver.switch_to.active_element.get_attribute('class'))
                 driver.switch_to.active_element.click()
 
-                driver.switch_to.active_element.send_keys(Keys.ENTER)  # Нажатие клавиши Tab  description_field = button.send_keys(Keys.SHIFT)  # Отпустить клавишу Shift
-                pag.sleep(2)  # Ждем, чтобы устранить возможные задержки
+                pag.sleep(15)  # Ждем, чтобы устранить возможные задержки
                 # Загрузка изображений
                  # Нажатие на кнопку "Далее" с проверкой кликабельностиAdd commentMore actions
                 next_button = WebDriverWait(driver, 50).until(
@@ -250,7 +239,17 @@ def main():
                 )
                 next_button.click()
                 print("Кнопка 'Далее' нажата.")
+                for x in range(95):
+                    driver.switch_to.active_element.send_keys(Keys.TAB)  # Нажатие клавиши Tab
+                    driver.switch_to.active_element.send_keys(Keys.ENTER)
+                publish_button = WebDriverWait(driver, 30).until(
+                    EC.element_to_be_clickable((By.XPATH, "//span[contains(@class, 'x1lliihq') and text()='Опубликовать']/ancestor::div[@role='button']"))
+                )
+                publish_button.click()  # Нажимаем на кнопку "Опубликовать"
+                print("Кнопка 'Опубликовать' нажата.")
 
+                pag.confirm("Продолжить?", "Confirmation")
+                print("Кнопка 'Опубликовать' нажата.")
             else:
                 print(f"Кнопка найдена?")
                 return True
